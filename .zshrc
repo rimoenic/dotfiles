@@ -24,7 +24,7 @@ _load_settings "${DOTFILESPATH}/zsh"
 
 
 #----- direnv
-if [ -e $(which direnv) ]; then
+if [ -e "$(which direnv)" ]; then
     eval "$(direnv hook zsh)"
 else
     cat <<_EOF
@@ -41,6 +41,7 @@ if [ -d "$HOME/.anyenv/bin" ]; then
 else
     git clone https://github.com/anyenv/anyenv ~/.anyenv
     export PATH="$HOME/.anyenv/bin:$PATH"
+    anyenv install --force-init
     anyenv install pyenv
     exec $SHELL -l
 fi
@@ -48,3 +49,4 @@ fi
 
 #PATH重複排除 末尾で実行
 typeset -U path
+
