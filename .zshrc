@@ -33,6 +33,7 @@ $ sudo apt install direnv
 _EOF
 fi
 
+export PATH="$HOME/.local/bin:$PATH"
 
 #----- anyenv
 if [ -d "$HOME/.anyenv/bin" ]; then
@@ -61,7 +62,7 @@ asdf plugin is empty now. Don't you need some plugins(python, etc...)?
 $ asdf plugin add python
 _EOF
 fi
-
+    
 # git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 # ~/.fzf/install
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
