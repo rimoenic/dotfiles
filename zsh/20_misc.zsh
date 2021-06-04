@@ -26,7 +26,7 @@ function clean_all_ssh_agent()
                 SSH_AGENT_PID=$p
                 ssh-agent -k
         done
-        find /tmp -type d -iname "ssh-*" -print0 | xargs -0 rm -rf
+        find /tmp -maxdepth 1 -type d -iname "ssh-*" -print0 | xargs -0 rm -rf
 }
 
 if ! ssh_agent_is_available; then
