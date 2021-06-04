@@ -87,6 +87,20 @@ function ghq-fzf() {
 zle -N ghq-fzf
 bindkey '^]' ghq-fzf
 
+
+function ssh-fzf () {
+  local selected_host=$(grep "Host " ~/.ssh/config | grep -v '\*' | cut -b 6- | sed -r 's/ /\n/' | sort | uniq | fzf-tmux --query "$LBUFFER")
+
+  if [ -n "$selected_host" ]; then
+    BUFFER="ssh ${selected_host}"
+    zle accept-line
+  fi
+  zle reset-prompt
+}
+zle -N ssh-fzf
+bindkey '^\' ssh-fzf
+
+
 #PATH重複排除 末尾で実行
 typeset -U path
 
