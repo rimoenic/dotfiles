@@ -62,6 +62,31 @@ $ asdf plugin add python
 _EOF
 fi
 
+# git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+# ~/.fzf/install
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+#function ghq-fzf() {
+#  local src=$(ghq list | fzf --preview "ls -lap -T8 $(ghq root)/{} | tail -n+4 | awk '{print \$9\"/\"\$6\"/\"\$7 \" \" \$10}'")
+#  if [ -n "$src" ]; then
+#    BUFFER="cd $(ghq root)/$src"
+#    zle accept-line
+#  fi
+#  zle -R -c
+#}
+function ghq-fzf() {
+  local selected_dir=$(ghq list | fzf-tmux --query="$LBUFFER")
+
+  if [ -n "$selected_dir" ]; then
+    BUFFER="cd $(ghq root)/${selected_dir}"
+    zle accept-line
+  fi
+
+  zle reset-prompt
+}
+zle -N ghq-fzf
+bindkey '^]' ghq-fzf
+
 #PATH重複排除 末尾で実行
 typeset -U path
 
