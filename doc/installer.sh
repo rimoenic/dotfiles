@@ -59,6 +59,7 @@ TARGETS=(
     .zshrc
     .dircolors
     .tmux.conf
+    .ackrc
 )
 
 for val in ${TARGETS[@]};

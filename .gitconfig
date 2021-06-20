@@ -1,3 +1,69 @@
+[core]
+    # pager = diff-so-fancy | less --tabs=4 -RFX
+    # excludesfile = ~/.gitignore
+    preloadindex = true
+
+[color]
+    ui = auto
+
+[color "diff"]
+    # http://qiita.com/qurage/items/452f2debb64e2708a46c
+    meta = 242 238
+    frag = 239 236
+    old = 167 normal
+    new = 030 normal
+    context = 240
+    commit = 246 024
+
+#[color "diff"]
+#    meta = yellow bold
+#    frag = magenta bold
+#    old = red bold
+#    new = green bold
+#    whitespace = red reverse
+
+[alias]
+    st = status
+    co = checkout
+    ci = commit
+    typechange = status -s | awk '$1=="T"{print $2}' | xargs git checkout
+    graph = log --graph --date-order --all --pretty=format:'%h %Cred%d %Cgreen%ad %Cblue%cn %Creset%s' --date=short
+    br = switch
+    review = diff origin/master...
+    review-files = diff origin/master... --name-only
+    lg = log --color=always --max-count=10 --oneline origin/master...
+    delete-merged-branches = !git branch --merged | grep -v \\* | xargs -I % git branch -d %
+
+[help]
+    autocorrect = 1
+
+[push]
+    # Use the Git 1.x.x default to avoid errors on machines with old Git
+    # installations. To use `simple` instead, add this to your `~/.extra` file:
+    # `git config --global push.default simple`. See http://git.io/mMah-w.
+    default = matching
+
+[pager]
+    log  = diff-highlight | less -RX
+    show = diff-highlight | less -RX
+    diff = diff-highlight | less -RX
+    # diff = diff-so-fancy | less --tabs=4 -RFX
+    # diff = delta --dark --plus-color="#012800" --minus-color="#340001"
+
+[diff]
+    tool                = vimdiff
+    algorithm           = histogram
+    compactionHeuristic = true
+
 [ghq]
-    root = ~/Documents/Repositories
+    root = ~/src
     vcs = git
+    # user = "rimoenic"
+
+[merge]
+    tool = vimdiff
+
+[github]
+	user = rimoenic
+
+
