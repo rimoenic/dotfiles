@@ -3,10 +3,10 @@
 DOTPATH=$HOME/.dotfiles
 
 if [ ! -z "$WSLENV" ]; then
-    local TARGET_ENV=wsl
-    local USERPROFILE_PATH=$(wslpath $(wslvar USERPROFILE))
+    TARGET_ENV=wsl
+    USERPROFILE_PATH=$(wslpath $(wslvar USERPROFILE))
 else
-    local TARGET_ENV=other
+    TARGET_ENV=other
 fi
 
 function clone_repo()

@@ -36,16 +36,16 @@ fi
 export PATH="$HOME/.local/bin:$PATH"
 
 #----- anyenv
-if [ -d "$HOME/.anyenv/bin" ]; then
-    export PATH="$HOME/.anyenv/bin:$PATH"
-    eval "$(anyenv init -)"
-else
-    git clone https://github.com/anyenv/anyenv ~/.anyenv
-    export PATH="$HOME/.anyenv/bin:$PATH"
-    anyenv install --force-init
-    anyenv install pyenv
-    exec $SHELL -l
-fi
+#if [ -d "$HOME/.anyenv/bin" ]; then
+#    export PATH="$HOME/.anyenv/bin:$PATH"
+#    eval "$(anyenv init -)"
+#else
+#    git clone https://github.com/anyenv/anyenv ~/.anyenv
+#    export PATH="$HOME/.anyenv/bin:$PATH"
+#    anyenv install --force-init
+#    anyenv install pyenv
+#    exec $SHELL -l
+#fi
 
 #----- asdf
 if [ -d "$HOME/.asdf" ]; then
@@ -66,6 +66,8 @@ fi
 # git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 # ~/.fzf/install
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export FZF_DEFAULT_OPTS='--height 40% --reverse --border'
+
 
 #function ghq-fzf() {
 #  local src=$(ghq list | fzf --preview "ls -lap -T8 $(ghq root)/{} | tail -n+4 | awk '{print \$9\"/\"\$6\"/\"\$7 \" \" \$10}'")
@@ -76,7 +78,7 @@ fi
 #  zle -R -c
 #}
 function ghq-fzf() {
-  local selected_dir=$(ghq list | fzf-tmux --query="$LBUFFER")
+  local selected_dir=$(ghq list | fzf --query="$LBUFFER")
 
   if [ -n "$selected_dir" ]; then
     BUFFER="cd $(ghq root)/${selected_dir}"
@@ -90,7 +92,7 @@ bindkey '^]' ghq-fzf
 
 
 function ssh-fzf () {
-  local selected_host=$(grep "Host " ~/.ssh/config | grep -v '\*' | cut -b 6- | sed -r 's/ /\n/' | sort | uniq | fzf-tmux --query "$LBUFFER")
+  local selected_host=$(grep "Host " ~/.ssh/config | grep -v '\*' | cut -b 6- | sed -r 's/ /\n/' | sort | uniq | fzf --query "$LBUFFER")
 
   if [ -n "$selected_host" ]; then
     BUFFER="ssh ${selected_host}"
@@ -102,6 +104,10 @@ zle -N ssh-fzf
 bindkey '^\' ssh-fzf
 
 
+
 #PATH重複排除 末尾で実行
 typeset -U path
 
+
+# Added by serverless binary installer
+export PATH="$HOME/.serverless/bin:$PATH"
