@@ -69,5 +69,6 @@ do
 done
 
 
-
+[ ! -e "$HOME/.config/nvim" ] && mkdir "$HOME/.config/nvim"
+[ ! -e "$HOME/.config/nvim/init.vim" ] ln -snfv $(readlink -f "${DOTPATH}/nvim/init.vim") "$HOME/.config/nvim/init.vim"
 
