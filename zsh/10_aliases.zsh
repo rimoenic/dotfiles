@@ -12,7 +12,8 @@ alias df='df -h'
 alias pd=popd
 alias gd='dirs -v; echo -n "select number: "; read newdir; cd +"$newdir"'
 alias lv='lv -c'
-alias vi='nvim'
+[ -e "$(which vim)" ] && alias vi='vim'
+[ -e "$(which nvim)" ] && alias vim='nvim'
 alias screen='screen -U'
 
 autoload -Uz zmv
