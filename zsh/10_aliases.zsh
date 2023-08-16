@@ -15,6 +15,7 @@ alias lv='lv -c'
 [ -e "$(which vim)" ] && alias vi='vim'
 [ -e "$(which nvim)" ] && alias vim='nvim'
 alias screen='screen -U'
+alias awslocal='aws --endpoint-url=http://127.0.0.1:4566 --profile localstack'
 
 autoload -Uz zmv
 alias zrename='noglob zmv -W'
