@@ -104,10 +104,13 @@ zle -N ssh-fzf
 bindkey '^\' ssh-fzf
 
 
-
-#PATH重複排除 末尾で実行
-typeset -U path
+# tfenv
+export PATH="$HOME/.tfenv/bin:$PATH"
 
 
 # Added by serverless binary installer
 export PATH="$HOME/.serverless/bin:$PATH"
+
+
+#PATH重複排除 末尾で実行
+typeset -U path
