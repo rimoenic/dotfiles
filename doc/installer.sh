@@ -10,7 +10,7 @@ if [ ! -z "$WSLENV" ]; then
     case "$(grep '^ID=' /etc/os-release | sed 's/^ID=(.*)$/\1/')" in
         ubuntu)
             sudo apt update && sudo apt upgrade
-            if grep '^VERSION_ID=' /etc/os-release | grep '22.04'; then
+            if grep '^VERSION_ID=' /etc/os-release | grep -E '2[24].04'; then
                  sudo apt install wslu
             fi
             ;;
