@@ -35,7 +35,7 @@ fi
 
 export PATH="$HOME/.local/bin:$PATH"
 
-#----- anyenv
+##----- anyenv
 #if [ -d "$HOME/.anyenv/bin" ]; then
 #    export PATH="$HOME/.anyenv/bin:$PATH"
 #    eval "$(anyenv init -)"
@@ -47,21 +47,22 @@ export PATH="$HOME/.local/bin:$PATH"
 #    exec $SHELL -l
 #fi
 
-#----- asdf
-if [ -d "$HOME/.asdf" ]; then
-    source $HOME/.asdf/asdf.sh
-#    fpath=(${ASDF_DIR}/completions $fpath)
-#    # initialise completions with ZSH's compinit
-#    autoload -Uz compinit
-#    compinit
-else
-    # https://asdf-vm.com/#/core-manage-asdf
-    git clone https://github.com/asdf-vm/asdf.git $HOME/.asdf --branch v0.8.1
-    cat <<_EOF
-asdf plugin is empty now. Don't you need some plugins(python, etc...)?
-$ asdf plugin add python
-_EOF
-fi
+##----- asdf
+#if [ -d "$HOME/.asdf" ]; then
+#    source $HOME/.asdf/asdf.sh
+##    fpath=(${ASDF_DIR}/completions $fpath)
+##    # initialise completions with ZSH's compinit
+##    autoload -Uz compinit
+##    compinit
+#else
+#    # https://asdf-vm.com/#/core-manage-asdf
+#    git clone https://github.com/asdf-vm/asdf.git $HOME/.asdf --branch v0.8.1
+#    cat <<_EOF
+#asdf plugin is empty now. Don't you need some plugins(python, etc...)?
+#$ asdf plugin add python
+#_EOF
+#fi
+
 
 # git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 # ~/.fzf/install
