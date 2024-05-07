@@ -45,17 +45,13 @@ case $TARGET_ENV in
             ln -snfv ${DOTPATH_REAL} ${DOTPATH}
         fi
 
-        # copy C:\Users\<USER_NAME>\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json C:\Users\<USER_NAME>\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json.bak
-        # rmdir C:\Users\<USER_NAME>\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
-        # mklink /H C:\Users\<USER_NAME>\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json settings.json
-        WT_SETTINGS_JSON=${USERPROFILE_PATH}/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json
-        [[ ! -e ${WT_SETTINGS_JSON} ]] && { echo Reinstall this after install windows terminal from microsoft store; exit 1; }
-        NUM_LINKS=$(stat ${WT_SETTINGS_JSON} | head -n 3 | tail -n 1 | sed -r 's@.*\s*Links:\s*([0-9]+)@\1@')
-        if [[ ${NUM_LINKS} -eq 1 ]]; then
-            cp "${WT_SETTINGS_JSON}" "${WT_SETTINGS_JSON}.bak"
-            rm "${WT_SETTINGS_JSON}"
-            ln -nfv "${DOTPATH_REAL}/windows/WindowsTerminal/settings.json" "${WT_SETTINGS_JSON}"
-        fi
+        WT_SETTINGS_DIR=${USERPROFILE_PATH}/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/
+        [[ ! -e ${WT_SETTINGS_DIR} ]] && { echo Reinstall this after install windows terminal from microsoft store; exit 1; }
+
+        echo "###########################"
+        echo " Need to copy the settings.json to ${WT_SETTINGS_DIR} manually."
+        echo "###########################"
+        echo copy "${DOTPATH_REAL}/windows/WindowsTerminal/settings.json" "${WT_SETTINGS_DIR}"
         ;;
     *)
         DOTPATH_REAL=${DOTPATH}
