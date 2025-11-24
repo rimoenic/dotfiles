@@ -13,7 +13,10 @@ alias pd=popd
 alias gd='dirs -v; echo -n "select number: "; read newdir; cd +"$newdir"'
 alias lv='lv -c'
 [ -e "$(which vim)" ] && alias vi='vim'
-[ -e "$(which nvim)" ] && alias vim='nvim'
+if [ -e "$(which nvim)" ]; then
+    alias vi='nvim'
+    alias vim='nvim'
+fi
 alias screen='screen -U'
 alias awslocal='aws --endpoint-url=http://127.0.0.1:4566 --profile localstack'
 
