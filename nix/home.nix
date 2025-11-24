@@ -12,7 +12,80 @@
   programs.home-manager.enable = true;
 
   # パッケージ管理
-  programs.git.enable = true;
+  programs.git = {
+    enable = true;
+
+    # ユーザー情報（環境変数から取得、または手動設定）
+    # userName = "Your Name";
+    # userEmail = "your@email.com";
+
+    settings = {
+      # エイリアス
+      alias = {
+        st = "status";
+        co = "checkout";
+        ci = "commit";
+        typechange = "status -s | awk '$1==\"T\"{print $2}' | xargs git checkout";
+        graph = "log --graph --date-order --all --pretty=format:'%h %Cred%d %Cgreen%ad %Cblue%cn %Creset%s' --date=short";
+        br = "switch";
+        review = "diff origin/master...";
+        review-files = "diff origin/master... --name-only";
+        lg = "log --color=always --max-count=10 --oneline origin/master...";
+        delete-merged-branches = "!git branch --merged | grep -v \\\\* | xargs -I % git branch -d %";
+      };
+
+      # 各種設定
+      core = {
+        preloadindex = true;
+        autocrlf = false;
+      };
+
+      color = {
+        ui = "auto";
+        diff = {
+          meta = "242 238";
+          frag = "239 236";
+          old = "167 normal";
+          new = "030 normal";
+          context = "240";
+          commit = "246 024";
+        };
+      };
+
+      help = {
+        autocorrect = 1;
+      };
+
+      push = {
+        default = "matching";
+      };
+
+      pager = {
+        log = "diff-highlight | less -RX";
+        show = "diff-highlight | less -RX";
+        diff = "diff-highlight | less -RX";
+      };
+
+      diff = {
+        tool = "vimdiff";
+        algorithm = "histogram";
+        compactionHeuristic = true;
+      };
+
+      ghq = {
+        root = "~/src";
+        vcs = "git";
+      };
+
+      merge = {
+        tool = "vimdiff";
+      };
+
+      github = {
+        user = "rimoenic";
+      };
+    };
+  };
   programs.neovim.enable = true;
   programs.tmux.enable = true;
 
