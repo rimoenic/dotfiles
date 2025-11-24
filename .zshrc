@@ -113,5 +113,8 @@ export PATH="$HOME/.tfenv/bin:$PATH"
 export PATH="$HOME/.serverless/bin:$PATH"
 
 
+if [ -e "${HOME}/.nix-profile/etc/profile.d/nix.sh" ]; then . "${HOME}/.nix-profile/etc/profile.d/nix.sh"; fi # added by Nix installer
+
+
 #PATH重複排除 末尾で実行
 typeset -U path
