@@ -37,15 +37,22 @@ function clone_repo()
     fi
 }
 
-function install_ansible()
+function install_nix()
 {
-    if ! which ansible; then
-        # https://launchpad.net/~ansible/+archive/ubuntu/ansible
-        sudo add-apt-repository -y ppa:ansible/ansible
-        sudo apt -y update
-        sudo apt -y install ansible
+    if ! which nix; then
+        curl -sSfL https://artifacts.nixos.org/nix-installer | sh -s -- install
+        # インストーラー実行後、現在のシェルセッションにnixを読み込む
+        if [ -e "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh" ]; then
+            . "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
+        fi
     fi
 }
+
+function apply_home_manager()
+{
+    nix run github:nix-community/home-manager -- switch --flake "${DOTPATH}/nix#default" --impure
+}
+
 
 case $TARGET_ENV in
     wsl)
@@ -76,6 +83,9 @@ case $TARGET_ENV in
         ;;
 esac
 
+install_nix
+apply_home_manager
+
 
 
 
@@ -84,7 +94,6 @@ esac
 TARGETS=(
     .zshrc
     .dircolors
-    .tmux.conf
     .ackrc
 )
 
