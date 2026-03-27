@@ -36,6 +36,8 @@ alias ssh='env TERM=xterm-256color ssh'
 
 alias digsakura='dig @ns1.dns.ne.jp'
 
+alias dc='docker compose'
+
 
 
 function mule() {
@@ -103,7 +105,7 @@ function rowo()
 
 function roadwork-export()
 {
-    roadwork -e --split --with-soa-ns -o ${PWD}
+    roadwork -e --split --with-soa-ns -o ${PWD} $*
 }
 
 function rw-del-zone()
