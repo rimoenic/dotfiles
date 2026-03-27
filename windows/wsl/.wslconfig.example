@@ -1,0 +1,10 @@
+[wsl2]
+# memory: 搭載RAMの50%程度を推奨（例：16GB搭載なら8GB）
+memory=8GB
+# swap: 1GB程度で十分なケースが多い
+swap=1GB
+
+
+[experimental]
+# メモリ回収機構
+autoMemoryReclaim=gradual

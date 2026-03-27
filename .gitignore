@@ -1,5 +1,6 @@
 .DS_Store
 .zshrc.local
+windows/wsl/.wslconfig
 *~
 !.config/fish
 .zsh/history/

@@ -88,14 +88,11 @@ options = "metadata,uid=$(id -u),gid=$(id -g),umask=22,fmask=11"
 default = ${USER}
 EOF
 
-        WT_SETTINGS_DIR=${USERPROFILE_PATH}/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/
-        [[ ! -e ${WT_SETTINGS_DIR} ]] && { echo Reinstall this after install windows terminal from microsoft store; exit 1; }
-
         echo " "
         echo "###########################"
-        echo " Need to copy the settings.json to ${WT_SETTINGS_DIR} manually."
+        echo " Run setup.ps1 on Windows to configure Windows Terminal, oh-my-posh and .wslconfig:"
         echo " "
-        echo copy "${DOTPATH_REAL}/windows/WindowsTerminal/settings.json" "${WT_SETTINGS_DIR}"
+        echo " > powershell -ExecutionPolicy Bypass -File $(wslpath -w ${DOTPATH_REAL}/windows/setup.ps1)"
         echo "###########################"
         echo " "
         ;;
