@@ -37,7 +37,7 @@ fi
 
  
 # copy to clipboard for cygwin
-alias -g CLIP="| clip.exe" 
+alias -g CLIP="| powershell.exe -Command clip.exe" 
 
 export GOPATH="$HOME/.go"
 export PATH="$HOME/bin:${PATH}"
