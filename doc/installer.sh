@@ -7,16 +7,18 @@ DOTPATH=$HOME/.dotfiles
 if [ ! -z "$WSLENV" ]; then
     TARGET_ENV=wsl
 
-    case "$(grep '^ID=' /etc/os-release | sed 's/^ID=\(.*\)$/\1/')" in
-        ubuntu)
-            sudo apt update && sudo apt upgrade
-            if grep '^VERSION_ID=' /etc/os-release | grep -E '2[24].04'; then
-                 sudo apt install wslu
-            fi
+    if ! which wslvar; then
+        case "$(grep '^ID=' /etc/os-release | sed 's/^ID=\(.*\)$/\1/')" in
+            ubuntu)
+                sudo apt -y update && sudo apt -y upgrade
+                if grep '^VERSION_ID=' /etc/os-release | grep -E '2[24].04'; then
+                    sudo apt -y install wslu
+                fi
+                ;;
+            *)
             ;;
-        *)
-         ;;
-    esac
+        esac
+    fi
     USERPROFILE_PATH=$(wslpath $(wslvar USERPROFILE))
 else
     TARGET_ENV=other
@@ -35,23 +37,38 @@ function clone_repo()
     fi
 }
 
+function install_ansible()
+{
+    if ! which ansible; then
+        # https://launchpad.net/~ansible/+archive/ubuntu/ansible
+        sudo add-apt-repository -y ppa:ansible/ansible
+        sudo apt -y update
+        sudo apt -y install ansible
+    fi
+}
+
 case $TARGET_ENV in
     wsl)
         DOTPATH_REAL=${USERPROFILE_PATH}/.dotfiles
         clone_repo "${DOTPATH_REAL}"
 
         if [ ! -L ${DOTPATH} ]; then
-            mv ${DOTPATH} ${DOTPATH}.orig || exit 1
+            if [[ -d ${DOTPATH} ]]; then
+                mv ${DOTPATH} ${DOTPATH}.orig || exit 1
+            fi
             ln -snfv ${DOTPATH_REAL} ${DOTPATH}
         fi
 
         WT_SETTINGS_DIR=${USERPROFILE_PATH}/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/
         [[ ! -e ${WT_SETTINGS_DIR} ]] && { echo Reinstall this after install windows terminal from microsoft store; exit 1; }
 
+        echo " "
         echo "###########################"
         echo " Need to copy the settings.json to ${WT_SETTINGS_DIR} manually."
-        echo "###########################"
+        echo " "
         echo copy "${DOTPATH_REAL}/windows/WindowsTerminal/settings.json" "${WT_SETTINGS_DIR}"
+        echo "###########################"
+        echo " "
         ;;
     *)
         DOTPATH_REAL=${DOTPATH}
