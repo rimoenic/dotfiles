@@ -165,7 +165,27 @@
     awscli2
     aws-sam-cli
     uv
-    tenv
+    tenv              # terraform version manager
+    ruby              # roadworker gem のため
+    dig               # DNS lookup (bind9-dnsutils相当)
+    fq                # バイナリフォーマット解析
+    jq                # JSON処理
+    nkf               # 文字コード変換
+    pwgen             # パスワード生成
+    whois
+    zip
+    unzip
+    noto-fonts        # 日本語フォント
+    obsidian          # ノートアプリ（WSLg必要）
+    apacheHttpd       # htpasswd等のユーティリティ
+    jsonnet
+    shellcheck
+    shfmt
+    go                # golang
+    tree
+    subversion
+    qrencode
+    jc                # JSON化CLIツール
   ];
 
   # Zsh設定は既存の.zshrcを使用するため、Home Managerでは管理しない
