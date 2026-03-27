@@ -122,8 +122,8 @@ if [ -e "${HOME}/.nix-profile/etc/profile.d/nix.sh" ]; then . "${HOME}/.nix-prof
 typeset -U path
 
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
 export SAM_CLI_TELEMETRY=0
 
@@ -133,7 +133,7 @@ if which aws_completer &>/dev/null; then
     complete -C "$(which aws_completer)" aws
 fi
 
-source $HOME/.tenv.completion.zsh
+[ -f "$HOME/.tenv.completion.zsh" ] && source "$HOME/.tenv.completion.zsh"
 
 # ローカル固有設定（gitignore対象）
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
