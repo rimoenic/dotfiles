@@ -90,19 +90,15 @@
 
   programs.tmux = {
     enable = true;
-    shell = "/bin/zsh";
-    prefix = "C-t";
+    shell = "${pkgs.zsh}/bin/zsh";
+    prefix = "C-t"; # rebindingしてくれるから手動でunbindなどする必要無し
     keyMode = "vi";
-    baseIndex = 1;
+    baseIndex = 1; # pane-base-indexも設定してくれる
     escapeTime = 1;
     terminal = "screen-256color";
 
     extraConfig = ''
       set-environment -g CHERE_INVOKING 1
-
-      # プレフィックス設定
-      bind-key C-t send-prefix
-      unbind-key C-b
 
       # 設定リロード
       bind-key C-r source-file ~/.config/tmux/tmux.conf \; display-message "Reloaded."
@@ -119,9 +115,6 @@
         bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "cat | powershell.exe -Command clip.exe"; \
         bind -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel "cat | powershell.exe -Command clip.exe"; \
       '
-
-      # ペインのインデックスを1から始める
-      setw -g pane-base-index 1
 
       # ペイン分割（カレントディレクトリ引継ぎ）
       bind | split-window -hc "#{pane_current_path}"
@@ -156,6 +149,7 @@
       set -g status-position top
 
       # ペイン区切り線の修正
+      # https://github.com/tmux/tmux/wiki/FAQ#why-are-tmux-pane-separators-dashed-rather-than-continuous-lines
       set -as terminal-overrides ",*:U8=0"
     '';
   };
