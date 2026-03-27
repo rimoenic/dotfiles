@@ -116,8 +116,8 @@
 
       # WSL clipboard対応
       if-shell 'test -n ''${WSLENV}' '\
-        bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "cat | clip.exe"; \
-        bind -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel "cat | clip.exe"; \
+        bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "cat | powershell.exe -Command clip.exe"; \
+        bind -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel "cat | powershell.exe -Command clip.exe"; \
       '
 
       # ペインのインデックスを1から始める
