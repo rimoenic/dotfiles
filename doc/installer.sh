@@ -66,6 +66,28 @@ case $TARGET_ENV in
             ln -snfv ${DOTPATH_REAL} ${DOTPATH}
         fi
 
+        # NOTE: overwrites existing /etc/wsl.conf
+        if [ -f /etc/wsl.conf ]; then
+            if [ ! -f /etc/wsl.conf.orig ]; then
+                sudo cp /etc/wsl.conf /etc/wsl.conf.orig
+            else
+                echo "Current /etc/wsl.conf (will be overwritten):"
+                cat /etc/wsl.conf
+            fi
+        fi
+        sudo tee /etc/wsl.conf > /dev/null << EOF
+[boot]
+systemd = true
+
+[automount]
+enable = true
+root = /mnt/
+options = "metadata,uid=$(id -u),gid=$(id -g),umask=22,fmask=11"
+
+[user]
+default = ${USER}
+EOF
+
         WT_SETTINGS_DIR=${USERPROFILE_PATH}/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/
         [[ ! -e ${WT_SETTINGS_DIR} ]] && { echo Reinstall this after install windows terminal from microsoft store; exit 1; }
 
@@ -86,9 +108,16 @@ esac
 install_nix
 apply_home_manager
 
-
-
-
+if ! locale -a 2>/dev/null | grep -q "en_US.utf8"; then
+    if which locale-gen &>/dev/null; then
+        sudo locale-gen en_US.UTF-8
+        sudo localectl set-locale LANG=en_US.UTF-8
+    else
+        echo "Warning: locale-gen not found. Please install 'locales' package and configure en_US.UTF-8 manually:"
+        echo "# sudo locale-gen en_US.UTF-8"
+        echo "# sudo localectl set-locale LANG=en_US.UTF-8"
+    fi
+fi
 
 
 TARGETS=(
