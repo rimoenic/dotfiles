@@ -64,8 +64,10 @@ export PATH="$HOME/.local/bin:$PATH"
 #fi
 
 
-# git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-# ~/.fzf/install
+[ ! -e "${HOME}/.fzf" ] && {
+    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+    ~/.fzf/install
+}
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_OPTS='--height 40% --reverse --border'
 
@@ -93,7 +95,7 @@ bindkey '^]' ghq-fzf
 
 
 function ssh-fzf () {
-  local selected_host=$(grep "Host " ~/.ssh/config | grep -v '\*' | cut -b 6- | sed -r 's/ /\n/' | sort | uniq | fzf --query "$LBUFFER")
+  local selected_host=$(grep "Host " ~/.ssh/config | sed 's///g' | grep -v '\*' | cut -b 6- | sed -r 's/ /\n/' | sort | uniq | fzf --query "$LBUFFER")
 
   if [ -n "$selected_host" ]; then
     BUFFER="ssh ${selected_host}"
