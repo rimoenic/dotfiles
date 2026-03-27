@@ -128,8 +128,10 @@ export NVM_DIR="$HOME/.nvm"
 export SAM_CLI_TELEMETRY=0
 
 
-autoload bashcompinit && bashcompinit
-complete -C '/usr/local/bin/aws_completer' aws
+if which aws_completer &>/dev/null; then
+    autoload bashcompinit && bashcompinit
+    complete -C "$(which aws_completer)" aws
+fi
 
 source $HOME/.tenv.completion.zsh
 

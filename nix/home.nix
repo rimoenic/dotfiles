@@ -164,9 +164,14 @@
   programs.fzf.enable = true;
   programs.direnv.enable = true;
 
-  # ghqはHome Managerのprogramsにないので、packagesで管理
+  # ghq/zshはHome Managerのprogramsにないので、packagesで管理
   home.packages = with pkgs; [
     ghq
+    zsh
+    awscli2
+    aws-sam-cli
+    uv
+    tenv
   ];
 
   # Zsh設定は既存の.zshrcを使用するため、Home Managerでは管理しない
