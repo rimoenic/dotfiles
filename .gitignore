@@ -1,4 +1,5 @@
 .DS_Store
+.zshrc.local
 *~
 !.config/fish
 .zsh/history/

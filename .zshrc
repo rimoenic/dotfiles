@@ -117,3 +117,20 @@ export PATH="$HOME/.serverless/bin:$PATH"
 
 #PATH重複排除 末尾で実行
 typeset -U path
+
+. "$HOME/.cargo/env"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+export SAM_CLI_TELEMETRY=0
+
+
+autoload bashcompinit && bashcompinit
+complete -C '/usr/local/bin/aws_completer' aws
+
+source $HOME/.tenv.completion.zsh
+
+# ローカル固有設定（gitignore対象）
+[ -f ~/.zshrc.local ] && source ~/.zshrc.local

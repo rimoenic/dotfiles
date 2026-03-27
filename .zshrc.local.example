@@ -1,0 +1,7 @@
+# マシン固有の設定をここに書く（このファイルをコピーして .zshrc.local として使う）
+
+## Claude Code + Obsidian 連携
+## obsidianコマンドでの動的取得は起動時間増加のためハードコード推奨
+# export CLAUDE_OBSIDIAN_VAULT="$(obsidian vault name='your-vault' info=path)"
+export CLAUDE_OBSIDIAN_VAULT="/path/to/your/obsidian-vault"
+export CLAUDE_OBSIDIAN_NOTES_SUBDIR="Notes"
