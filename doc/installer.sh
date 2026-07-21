@@ -6,20 +6,7 @@ DOTPATH=$HOME/.dotfiles
 
 if [ ! -z "$WSLENV" ]; then
     TARGET_ENV=wsl
-
-    if ! which wslvar; then
-        case "$(grep '^ID=' /etc/os-release | sed 's/^ID=\(.*\)$/\1/')" in
-            ubuntu)
-                sudo apt -y update && sudo apt -y upgrade
-                if grep '^VERSION_ID=' /etc/os-release | grep -E '2[24].04'; then
-                    sudo apt -y install wslu
-                fi
-                ;;
-            *)
-            ;;
-        esac
-    fi
-    USERPROFILE_PATH=$(wslpath $(wslvar USERPROFILE))
+    WINDOWS_USERPROFILE="${USERPROFILE}"
 else
     TARGET_ENV=other
 fi
@@ -34,6 +21,8 @@ function clone_repo()
     if [[ ! -f  ${DEPLOY_PATH}/doc/installer.sh ]]; then
         mv "${DEPLOY_PATH}" "${DEPLOY_PATH}.orig" || { echo directory backup failed; exit 1; }
         git clone https://github.com/rimoenic/dotfiles "${DEPLOY_PATH}"
+    else
+        echo "Repository has already been cloned."
     fi
 }
 
@@ -56,7 +45,7 @@ function apply_home_manager()
 
 case $TARGET_ENV in
     wsl)
-        DOTPATH_REAL=${USERPROFILE_PATH}/.dotfiles
+        DOTPATH_REAL="${WINDOWS_USERPROFILE}/.dotfiles"
         clone_repo "${DOTPATH_REAL}"
 
         if [ ! -L ${DOTPATH} ]; then
@@ -128,8 +117,4 @@ do
     SOURCE=$(readlink -f "${DOTPATH}/${val}")
     ln -snfv "${SOURCE}" "$HOME/${val}"
 done
-
-
-[ ! -e "$HOME/.config/nvim" ] && mkdir "$HOME/.config/nvim"
-[ ! -e "$HOME/.config/nvim/init.vim" ] && ln -snfv $(readlink -f "${DOTPATH}/nvim/init.vim") "$HOME/.config/nvim/init.vim"
 
