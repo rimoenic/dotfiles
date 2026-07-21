@@ -95,7 +95,8 @@ bindkey '^]' ghq-fzf
 
 
 function ssh-fzf () {
-  local selected_host=$(grep "Host " ~/.ssh/config | sed 's///g' | grep -v '\*' | cut -b 6- | sed -r 's/ /\n/' | sort | uniq | fzf --query "$LBUFFER")
+  local selected_host=$(grep "Host " ~/.ssh/config | sed 's/
+//g' | grep -v '\*' | cut -b 6- | sed -r 's/ /\n/' | sort | uniq | fzf --query "$LBUFFER")
 
   if [ -n "$selected_host" ]; then
     BUFFER="ssh ${selected_host}"
@@ -117,6 +118,8 @@ export PATH="$HOME/.serverless/bin:$PATH"
 
 if [ -e "${HOME}/.nix-profile/etc/profile.d/nix.sh" ]; then . "${HOME}/.nix-profile/etc/profile.d/nix.sh"; fi # added by Nix installer
 
+alias hms='home-manager switch --flake "${DOTFILESPATH}/nix#default" --impure'
+
 
 #PATH重複排除 末尾で実行
 typeset -U path
@@ -129,7 +132,7 @@ export SAM_CLI_TELEMETRY=0
 
 
 if which aws_completer &>/dev/null; then
-    autoload bashcompinit && bashcompinit
+    autoload -Uz bashcompinit && bashcompinit
     complete -C "$(which aws_completer)" aws
 fi
 
@@ -137,3 +140,10 @@ fi
 
 # ローカル固有設定（gitignore対象）
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
+
+# bun completions
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
