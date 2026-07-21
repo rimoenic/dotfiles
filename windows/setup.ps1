@@ -17,6 +17,36 @@ function Backup-AndCopy {
     Write-Host "Copied: $Dest"
 }
 
+function Install-ModuleIfMissing {
+    param([string]$Name)
+    if (!(Get-Module -ListAvailable -Name $Name)) {
+        Write-Host "Installing $Name..."
+        Install-Module -Scope CurrentUser -Name $Name -Force
+    } else {
+        Write-Host "$Name already installed, skipping."
+    }
+}
+
+# PSGalleryモジュール
+Install-ModuleIfMissing "PSFzf"
+Install-ModuleIfMissing "Terminal-Icons"
+Install-ModuleIfMissing "z"
+
+# wingetパッケージ
+foreach ($pkg in @(
+    "Microsoft.PowerShell",
+    "JanDeDobbeleer.OhMyPosh",
+    "junegunn.fzf",
+    "sharkdp.fd"
+)) {
+    if (!(winget list --id $pkg -e 2>$null | Select-String $pkg)) {
+        Write-Host "Installing $pkg..."
+        winget install --id $pkg -e --silent
+    } else {
+        Write-Host "$pkg already installed, skipping."
+    }
+}
+
 # .wslconfig
 $wslconfigDest = "$env:USERPROFILE\.wslconfig"
 $wslconfigSrc  = "$dotfilesWindows\wsl\.wslconfig.example"
@@ -38,8 +68,8 @@ if (Test-Path $wtDir) {
     Write-Host "WARNING: Windows Terminal not found. Install it from Microsoft Store first."
 }
 
-# PowerShell profile (oh-my-posh)
-$profileSrc = "$dotfilesWindows\oh-my-posh\Microsoft.PowerShell_profile.ps1"
+# PowerShell profile (ローダーのみコピー、設定はdotfiles/windows/powershell/以下を直接参照)
+$profileSrc = "$dotfilesWindows\Microsoft.PowerShell_profile.ps1"
 $profileDir  = Split-Path $PROFILE
 if (!(Test-Path $profileDir)) {
     New-Item -ItemType Directory -Path $profileDir | Out-Null
