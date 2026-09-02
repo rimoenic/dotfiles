@@ -236,6 +236,7 @@ set shiftround
     shellcheck
     shfmt
     go                # golang
+    gcc               # for Golang
     tree
     subversion
     qrencode
