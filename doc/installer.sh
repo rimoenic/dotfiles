@@ -84,6 +84,12 @@ EOF
         echo " > powershell -ExecutionPolicy Bypass -File $(wslpath -w ${DOTPATH_REAL}/windows/setup.ps1)"
         echo "###########################"
         echo " "
+
+        [[ ! -L ${HOME}/UserProfile ]] && ln -snf "${WINDOWS_USERPROFILE}" ${HOME}/UserProfile
+        for i in Desktop Downloads Documents
+        do
+            [[ ! -L ${HOME}/${i} ]] && ln -snf "${WINDOWS_USERPROFILE}/${i}" ${HOME}/${i}
+        done
         ;;
     *)
         DOTPATH_REAL=${DOTPATH}
