@@ -69,7 +69,7 @@ case $TARGET_ENV in
 systemd = true
 
 [automount]
-enable = true
+enabled = true
 root = /mnt/
 options = "metadata,uid=$(id -u),gid=$(id -g),umask=22,fmask=11"
 
