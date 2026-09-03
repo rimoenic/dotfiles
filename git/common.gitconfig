@@ -5,6 +5,15 @@
     # pager = diff-so-fancy | less --tabs=4 -RFX
     # excludesfile = ~/.gitignore
     preloadindex = true
+
+    # 変換は一切しない（as-is）。CRLF で repo に入っているものは意図して
+    # そう入れたものと見なし、そのまま取り出す。
+    #
+    # input にはしない。commit 時に CRLF→LF へ正規化されるため、CRLF で
+    # なければ困るファイル（.bat 等）を保存できなくなる。
+    #
+    # 改行を固定したいものは各リポジトリの .gitattributes で宣言する。
+    # autocrlf はマシン単位の粗い設定で、ファイル単位の要求を表現できない。
     autocrlf = false
 
 [color]
@@ -53,13 +62,23 @@
     lg = !git log --color=always --max-count=10 --oneline $(git default-branch)..HEAD
 
 [help]
-    autocorrect = 1
+    # タイポ時に確認を出す。値の単位は 0.1 秒で、1 だと 0.1 秒後に自動実行して
+    # しまう（止める余地がない）。push/reset へ誤補正されると事故るため prompt。
+    # Git 2.38 以降。
+    autocorrect = prompt
 
 [push]
-    # Use the Git 1.x.x default to avoid errors on machines with old Git
-    # installations. To use `simple` instead, add this to your `~/.extra` file:
-    # `git config --global push.default simple`. See http://git.io/mMah-w.
-    default = matching
+    # 現在のブランチだけを push する。
+    # matching は同名ブランチを一斉に push するため、手元で試している別の
+    # ブランチが意図せず公開される。「古い Git への配慮」は Git 2.0（2014）が
+    # 既定を simple に変えて以降は不要。この設定は手元の Git しか見ない。
+    default = simple
+
+    # 新規ブランチの初回 push で -u / --set-upstream を省略できる（2.37+）
+    autoSetupRemote = true
+
+    # コミットに紐づく注釈タグを一緒に push する
+    followTags = true
 
 [github]
 	user = rimoenic
