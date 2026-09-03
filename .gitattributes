@@ -1,0 +1,37 @@
+# 改行コードはここで宣言する。core.autocrlf は両OSとも false（as-is）にして
+# あり、変換の判断はすべてこのファイルに集約している。
+#
+# autocrlf を使わないのは、あれがマシン単位の設定で「このファイルは LF、
+# あれは CRLF」というファイル単位の要求を表現できないため。こちらは repo に
+# コミットされるので、どのマシンで clone しても同じ結果になる。
+
+# 既定：テキストと判定したものは repo 内では LF に正規化する。
+# 作業ツリーの改行は OS 慣習に従う。
+* text=auto
+
+# --- LF でなければ動かないもの ---
+*.sh        text eol=lf
+*.zsh       text eol=lf
+*.nix       text eol=lf
+.bash_profile text eol=lf
+.zshrc      text eol=lf
+*.conf      text eol=lf
+.dircolors  text eol=lf
+.inputrc    text eol=lf
+.ackrc      text eol=lf
+.curlrc     text eol=lf
+
+# WSL 内で読まれる設定なので LF。
+*.gitconfig text eol=lf
+.gitignore  text eol=lf
+
+# --- CRLF でなければ困るもの ---
+# PowerShell は BOM 無し UTF-8 + CRLF が既定。Windows 側でしか実行しない。
+*.ps1       text eol=crlf
+*.bat       text eol=crlf
+*.cmd       text eol=crlf
+
+# --- どちらでもよいが、明示しておくもの ---
+*.md        text
+*.json      text
+*.lock      text eol=lf
