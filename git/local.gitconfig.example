@@ -12,3 +12,18 @@
 #
 # [includeIf "gitdir:~/src/github.com/rimoenic/"]
 #     path = ~/.dotfiles/git/personal.gitconfig
+
+# 共有フォルダ上のリポジトリを開くと、所有者が違うため Git が
+# "dubious ownership" として操作を拒否する。信頼するものをここに列挙する。
+# マシンとネットワーク環境に依存するので repo には入れない。
+#
+# %(prefix)/ は UNC パスを書くときの決まり文句（file:// 相当の接頭辞）。
+#
+# [safe]
+#     directory = %(prefix)///fileserver/share/path
+#     directory = %(prefix)///198.51.100.10/share/path
+
+# 社内ホストなど、資格情報の取得方式を指定したい場合
+#
+# [credential "https://git.example.com"]
+#     provider = generic

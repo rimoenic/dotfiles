@@ -4,5 +4,46 @@
     # Git for Windows 同梱の Git Credential Manager。
     helper = manager
 
+[credential "helperselector"]
+    selected = manager-core
+
+[credential "https://dev.azure.com"]
+    # 同一ホストに複数の組織が載るサービスでは、パスまで含めないと
+    # 資格情報を引き当てられない。
+    useHttpPath = true
+
 [ghq]
-    root = ~/src
+    # WSL 側とは別のドライブに置いているため、common ではなくここで指定する。
+    root = D:/Repositories
+
+# --- WinMerge（GUI の差分・マージツール）---
+# path ではなく cmd に書く。path は Git がそのまま exec するためチルダも
+# 変数も展開されない。cmd はシェルが解釈する。
+#
+# ~ ではなく環境変数を使う。~ はクォートの内側では展開されないため
+# \"~/...\" は文字列のまま渡って失敗する。パスに空白が含まれてもよいよう
+# クォートは外せないので、クォート内でも展開される変数を使う。
+#
+# パスは winget で入れた場合の既定の配置。WinMerge.WinMerge は
+# windows/winget/fav_tools.json で宣言しているので、そちらで入る前提。
+#
+# WinMerge のオプション:
+#   -e   Esc で閉じられるようにする
+#   -u   最近使ったファイル一覧に残さない
+#   -fm  マージモードで開く
+#   -wl -wr  左右を読み取り専用にする（誤編集の防止）
+#   -dl -dm -dr  各ペインの見出し
+#   -o   マージ結果の出力先
+
+[merge]
+    guitool = winmerge
+
+[mergetool "winmerge"]
+    cmd = \"$LOCALAPPDATA/Programs/WinMerge/WinMergeU.exe\" -e -u -wl -wr -fm -dl \"Mine: $LOCAL\" -dm \"Merged: $BASE\" -dr \"Theirs: $REMOTE\" \"$LOCAL\" \"$BASE\" \"$REMOTE\" -o \"$MERGED\"
+    trustExitCode = true
+
+[diff]
+    guitool = winmerge
+
+[difftool "winmerge"]
+    cmd = \"$LOCALAPPDATA/Programs/WinMerge/WinMergeU.exe\" -e -u \"$LOCAL\" \"$REMOTE\"
