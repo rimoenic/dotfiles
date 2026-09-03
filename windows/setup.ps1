@@ -196,7 +196,51 @@ if (!(Test-Path $wslconfigDest)) {
     Write-Host ".wslconfig already exists, skipping. ($wslconfigDest)"
 }
 
-# --- 6. Windows Terminal settings.json ---
+# --- 6. .gitconfig ---
+# 設定本体は repo の git/*.gitconfig に置き、ここではそれを include するだけの
+# 薄い ~/.gitconfig を生成する。WSL 側（home.nix の programs.git.includes）も
+# 同じ common.gitconfig を読むので、共通部分の実体が一つに保たれる。
+#
+# 既存の ~/.gitconfig は上書きしない。手元で git config --global した内容が
+# 消えるため。その場合は下の include 行を手で足す。
+$gitRepoDir     = Split-Path $dotfilesWindows -Parent
+$gitconfigDest  = Join-Path $env:USERPROFILE '.gitconfig'
+$gitLocalSample = Join-Path $gitRepoDir 'git\local.gitconfig.example'
+$gitLocal       = Join-Path $gitRepoDir 'git\local.gitconfig'
+
+# include の path は Git が解釈するため、区切りは / に統一する。
+# Git for Windows はバックスラッシュをエスケープ文字として扱うため。
+$gitDirForward = $gitRepoDir.Replace('\', '/') + '/git'
+
+if (Test-Path $gitconfigDest) {
+    Write-Host ".gitconfig already exists, skipping. ($gitconfigDest)"
+    Write-Host "NOTE: To use the shared config, add these lines manually:"
+    Write-Host "  [include]"
+    Write-Host "      path = $gitDirForward/common.gitconfig"
+    Write-Host "  [include]"
+    Write-Host "      path = $gitDirForward/windows.gitconfig"
+} else {
+    @"
+# このファイルは windows/setup.ps1 が生成した。設定本体は .dotfiles/git/ にある。
+[include]
+    path = $gitDirForward/common.gitconfig
+[include]
+    path = $gitDirForward/windows.gitconfig
+[include]
+    path = $gitDirForward/local.gitconfig
+"@ | Set-Content -Path $gitconfigDest -Encoding utf8NoBOM
+    Write-Host "Created: $gitconfigDest"
+}
+
+# ユーザ情報は repo に入れていないので、雛形から作って編集を促す。
+if (!(Test-Path $gitLocal)) {
+    Copy-Item $gitLocalSample $gitLocal
+    Write-Host "Created: $gitLocal"
+    Write-Host "NOTE: Set your name and email there."
+    Invoke-Item $gitLocal
+}
+
+# --- 7. Windows Terminal settings.json ---
 $wtDir = "$env:USERPROFILE\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState"
 $wtSrc = "$dotfilesWindows\WindowsTerminal\settings.json"
 if (Test-Path $wtDir) {
@@ -205,7 +249,7 @@ if (Test-Path $wtDir) {
     Write-Host "WARNING: Windows Terminal not found. Install it from Microsoft Store first."
 }
 
-# --- 7. PowerShell profile ---
+# --- 8. PowerShell profile ---
 # ローダーのみコピー。設定本体は dotfiles/windows/powershell/ 以下を直接参照する。
 $profileSrc = "$dotfilesWindows\Microsoft.PowerShell_profile.ps1"
 $profileDir  = Split-Path $PROFILE
