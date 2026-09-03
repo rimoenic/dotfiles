@@ -1,6 +1,8 @@
 .DS_Store
 .zshrc.local
 windows/wsl/.wslconfig
+# winget export の生出力。環境依存の実導入リストなので共有しない
+windows/winget/winget_pkgs*.json
 *~
 !.config/fish
 .zsh/history/

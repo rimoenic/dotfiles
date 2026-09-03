@@ -1,0 +1,89 @@
+{
+	"$schema" : "https://aka.ms/winget-packages.schema.2.0.json",
+	"CreationDate" : "2026-09-03T00:00:00.000-00:00",
+	"Sources" :
+	[
+		{
+			"Packages" :
+			[
+				{ "PackageIdentifier" : "Git.Git", "Scope" : "machine" },
+				{ "PackageIdentifier" : "Microsoft.PowerShell" },
+				{ "PackageIdentifier" : "Microsoft.WindowsTerminal" },
+				{ "PackageIdentifier" : "JanDeDobbeleer.OhMyPosh" },
+				{ "PackageIdentifier" : "junegunn.fzf" },
+				{ "PackageIdentifier" : "sharkdp.fd" },
+				{ "PackageIdentifier" : "x-motemen.ghq" },
+				{ "PackageIdentifier" : "marlocarlo.psmux" },
+				{ "PackageIdentifier" : "wez.wezterm" },
+
+				{ "PackageIdentifier" : "Microsoft.VisualStudioCode" },
+				{ "PackageIdentifier" : "ZedIndustries.Zed" },
+				{ "PackageIdentifier" : "Anthropic.Claude" },
+				{ "PackageIdentifier" : "Docker.DockerDesktop" },
+				{ "PackageIdentifier" : "Hashicorp.Terraform" },
+				{ "PackageIdentifier" : "Hashicorp.TerraformLanguageServer" },
+				{ "PackageIdentifier" : "Amazon.AWSCLI", "Scope" : "machine" },
+				{ "PackageIdentifier" : "astral-sh.uv" },
+				{ "PackageIdentifier" : "Insomnia.Insomnia" },
+				{ "PackageIdentifier" : "Postman.Postman" },
+				{ "PackageIdentifier" : "Netsdk.S3Browser" },
+				{ "PackageIdentifier" : "WinMerge.WinMerge" },
+				{ "PackageIdentifier" : "PFOJEnterprisesLLC.ModernCSV" },
+
+				{ "PackageIdentifier" : "TeraTermProject.teraterm5" },
+				{ "PackageIdentifier" : "WireGuard.WireGuard" },
+				{ "PackageIdentifier" : "OpenVPNTechnologies.OpenVPN", "Scope" : "machine" },
+				{ "PackageIdentifier" : "WiresharkFoundation.Wireshark" },
+				{ "PackageIdentifier" : "Insecure.Nmap" },
+				{ "PackageIdentifier" : "KeePassXCTeam.KeePassXC", "Scope" : "machine" },
+
+				{ "PackageIdentifier" : "Zen-Team.Zen-Browser", "Scope" : "machine" },
+				{ "PackageIdentifier" : "Google.Chrome.Beta.EXE" },
+				{ "PackageIdentifier" : "ImputNet.Helium" },
+				{ "PackageIdentifier" : "Mozilla.Thunderbird.ja", "Scope" : "machine" },
+				{ "PackageIdentifier" : "SlackTechnologies.Slack" },
+				{ "PackageIdentifier" : "Microsoft.Teams" },
+				{ "PackageIdentifier" : "Zoom.Zoom.EXE" },
+				{ "PackageIdentifier" : "Amazon.Chime" },
+				{ "PackageIdentifier" : "Biscuit.Biscuit" },
+
+				{ "PackageIdentifier" : "Obsidian.Obsidian" },
+				{ "PackageIdentifier" : "DeepL.DeepL" },
+				{ "PackageIdentifier" : "TheDocumentFoundation.LibreOffice", "Scope" : "machine" },
+				{ "PackageIdentifier" : "Adobe.Acrobat.Reader.64-bit" },
+				{ "PackageIdentifier" : "Foxit.FoxitReader.Inno" },
+				{ "PackageIdentifier" : "PDFsam.PDFsam" },
+				{ "PackageIdentifier" : "Google.GoogleDrive" },
+				{ "PackageIdentifier" : "Google.QuickShare" },
+
+				{ "PackageIdentifier" : "7zip.7zip", "Scope" : "machine" },
+				{ "PackageIdentifier" : "Microsoft.PowerToys" },
+				{ "PackageIdentifier" : "Microsoft.MouseWithoutBorders" },
+				{ "PackageIdentifier" : "SomePythonThings.ElevenClock" },
+				{ "PackageIdentifier" : "AntibodySoftware.WizTree" },
+				{ "PackageIdentifier" : "Piriform.Defraggler" },
+				{ "PackageIdentifier" : "Wagnardsoft.DisplayDriverUninstaller" },
+				{ "PackageIdentifier" : "CrystalDewWorld.CrystalDiskInfo" },
+				{ "PackageIdentifier" : "CrystalDewWorld.CrystalDiskMark" },
+				{ "PackageIdentifier" : "CPUID.CPU-Z" },
+				{ "PackageIdentifier" : "CPUID.HWMonitor" },
+				{ "PackageIdentifier" : "REALiX.HWiNFO" },
+				{ "PackageIdentifier" : "SDAssociation.SDMemoryCardFormatter" },
+
+				{ "PackageIdentifier" : "IrfanSkiljan.IrfanView" },
+				{ "PackageIdentifier" : "dotPDN.PaintDotNet" },
+				{ "PackageIdentifier" : "FireAlpaca.FireAlpaca" },
+				{ "PackageIdentifier" : "VideoLAN.VLC" },
+				{ "PackageIdentifier" : "Audacity.Audacity" }
+			],
+			"SourceDetails" :
+			{
+				"Argument" : "https://cdn.winget.microsoft.com/cache",
+				"Identifier" : "Microsoft.Winget.Source_8wekyb3d8bbwe",
+				"Name" : "winget",
+				"Type" : "Microsoft.PreIndexed.Package"
+			}
+		}
+	],
+	"WinGetVersion" : "1.29.250"
+}
