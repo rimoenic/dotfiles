@@ -30,13 +30,27 @@
     st = status
     co = checkout
     ci = commit
-    typechange = status -s | awk '$1=="T"{print $2}' | xargs git checkout
     graph = log --graph --date-order --all --pretty=format:'%h %Cred%d %Cgreen%ad %Cblue%cn %Creset%s' --date=short
     br = switch
-    review = diff origin/master...
-    review-files = diff origin/master... --name-only
-    lg = log --color=always --max-count=10 --oneline origin/master...
-    delete-merged-branches = !git branch --merged | grep -v \\* | xargs -I % git branch -d %
+    # --- 自己レビュー用の3点セット ---
+    # 「このブランチで自分が変えたところ」だけを見る。差分の書式が
+    # A...B（ドット3つ）なのは、分岐点から HEAD までを対象にするため。
+    # A..B だと他人が既定ブランチに入れた変更まで差分に混ざる。
+    #
+    # 既定ブランチは main / master のどちらもありうるので default-branch で
+    # 解決する。origin/HEAD → origin/main → origin/master の順に見る。
+    # 値の中の ; は INI のコメント開始と解釈されて切れるため使えない。
+    # シェル関数として定義し、本体を " " で囲むことで回避する。
+    default-branch = "!f() { git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null && return; for b in origin/main origin/master; do git rev-parse --verify --quiet $b >/dev/null && { echo $b; return; }; done; echo origin/main; }; f"
+
+    # 自分の変更の差分そのもの
+    review = !git diff $(git default-branch)...
+    # 自分が触ったファイル名だけ
+    review-files = !git diff $(git default-branch)... --name-only
+    # 自分が積んだコミット一覧。
+    # ここだけ .. （ドット2つ）なのは、log の ... が対称差（相手側の
+    # コミットも含む）を意味するため。diff の ... とは意味が違う。
+    lg = !git log --color=always --max-count=10 --oneline $(git default-branch)..HEAD
 
 [help]
     autocorrect = 1
@@ -52,7 +66,6 @@
 
 [diff]
     algorithm           = histogram
-    compactionHeuristic = true
 
 [ghq]
     vcs = git
