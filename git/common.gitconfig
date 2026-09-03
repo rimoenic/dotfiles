@@ -1,39 +1,11 @@
 # 両OS共通のGit設定。WSL側は home.nix の programs.git.includes から、
 # Windows側は setup.ps1 が配置する ~/.gitconfig の [include] から読まれる。
-
-[core]
-    # pager = diff-so-fancy | less --tabs=4 -RFX
-    # excludesfile = ~/.gitignore
-    preloadindex = true
-
-    # 変換は一切しない（as-is）。CRLF で repo に入っているものは意図して
-    # そう入れたものと見なし、そのまま取り出す。
-    #
-    # input にはしない。commit 時に CRLF→LF へ正規化されるため、CRLF で
-    # なければ困るファイル（.bat 等）を保存できなくなる。
-    #
-    # 改行を固定したいものは各リポジトリの .gitattributes で宣言する。
-    # autocrlf はマシン単位の粗い設定で、ファイル単位の要求を表現できない。
-    autocrlf = false
-
-[color]
-    ui = auto
-
-[color "diff"]
-    # http://qiita.com/qurage/items/452f2debb64e2708a46c
-    meta = 242 238
-    frag = 239 236
-    old = 167 normal
-    new = 030 normal
-    context = 240
-    commit = 246 024
-
-#[color "diff"]
-#    meta = yellow bold
-#    frag = magenta bold
-#    old = red bold
-#    new = green bold
-#    whitespace = red reverse
+#
+# 素のINIで持つ。Nixで生成すると Windows 側が WSL の home-manager switch に
+# 依存してしまい、片方を更新しないともう片方が古いままになるため。
+#
+# ここには「どちらのOSでも同じ意味で動くもの」だけを置く。外部コマンドに
+# 依存するもの（pager, difftool）とパス（ghq.root）は各OS側のファイルへ。
 
 [alias]
     st = status
@@ -61,6 +33,158 @@
     # コミットも含む）を意味するため。diff の ... とは意味が違う。
     lg = !git log --color=always --max-count=10 --oneline $(git default-branch)..HEAD
 
+[core]
+    preloadindex = true
+
+    # 変換は一切しない（as-is）。CRLF で repo に入っているものは意図して
+    # そう入れたものと見なし、そのまま取り出す。
+    #
+    # input にはしない。commit 時に CRLF→LF へ正規化されるため、CRLF で
+    # なければ困るファイル（.bat 等）を保存できなくなる。
+    #
+    # 改行を固定したいものは各リポジトリの .gitattributes で宣言する。
+    # autocrlf はマシン単位の粗い設定で、ファイル単位の要求を表現できない。
+    autocrlf = false
+
+[color]
+    ui = auto
+
+[color "diff"]
+    # http://qiita.com/qurage/items/452f2debb64e2708a46c
+    meta = 242 238
+    frag = 239 236
+    old = 167 normal
+    new = 030 normal
+    context = 240
+    commit = 246 024
+
+    # 行末の空白・空白混在の強調。Git 既定（赤背景）とほぼ同じ見た目。
+    #
+    # なお pager に diff-highlight を挟んでいる間、この色は期待通りに出ない。
+    # diff-highlight が行内差分を reverse で強調し直すため、背景色が前景に
+    # 回って明るい塊になる。色を変えても回避できないので、確実に拾いたい
+    # ときは git diff --check を使う。delta に移行すれば解消する見込み。
+    whitespace = red reverse
+
+    # 移動行の色（diff.colorMoved = zebra と対で使う）。
+    # zebra の既定は bold cyan / bold magenta で、bold を使わず明暗で
+    # 重要度を表すこの配色とは合わないため上書きする。
+    #
+    # Moved は「移動しただけ＝中身は変わっていない」ので、通常の
+    # old(167) / new(030) より一段沈めて、目が行かないようにする。
+    # Alternative は zebra が交互に使うもう一方の色。
+    oldMoved            = 96
+    newMoved            = 66
+    oldMovedAlternative = 132
+    newMovedAlternative = 72
+
+# git status の色。既定は緑/赤で bold が付く。diff 側と同じ考え方で、
+# 「まだ何もしていない untracked」を最も沈め、staged を明るくする。
+[color "status"]
+    added     = 030
+    changed   = 167
+    untracked = 240
+    branch    = 246
+
+# git log --decorate（ブランチ名・タグ）の色。graph alias で常に見る部分。
+[color "decorate"]
+    HEAD          = 030
+    branch        = 66
+    remoteBranch  = 96
+    tag           = 179
+    stash         = 240
+
+# --- マージ／リベース ---
+
+[merge]
+    # コンフリクト時に共通祖先も表示する。既定の merge スタイルは「自分の版」と
+    # 「相手の版」しか出さないため、どちらが何を変えたのか判断できない。
+    # zdiff3 は ||||||| の節に分岐元を出すので、両者の意図が読める。2.35+。
+    conflictStyle = zdiff3
+
+[rerere]
+    # 一度解決したコンフリクトの解決内容を記録し、同じものが再び出たら自動で
+    # 適用する。長命ブランチの rebase を繰り返すときに同じ手作業を省ける。
+    enabled = true
+    # 記録した解決を index にも反映する（毎回 git add し直さずに済む）
+    autoUpdate = true
+
+[rebase]
+    # rebase 開始時に未コミットの変更を自動 stash し、終了後に戻す
+    autoStash = true
+    # fixup!/squash! コミットを自動で並べ替える（git commit --fixup と対）
+    autoSquash = true
+    # rebase でブランチが動いたとき、それを指す他のローカルブランチも追従させる
+    # （スタックした PR を積んでいるときに壊れない）。2.38+
+    updateRefs = true
+
+# --- fetch / pull ---
+
+[fetch]
+    # リモートで消えたブランチの追跡参照をローカルからも消す。
+    # これが無いと origin/old-feature が延々と残り、review 系 alias や
+    # 補完のノイズになる。
+    prune = true
+    # 同様にタグも掃除する
+    pruneTags = true
+
+[pull]
+    # マージコミットを作らず、早送りできるときだけ pull を通す。
+    # できない場合は明示的に rebase か merge を選ぶ。意図しない
+    # 「Merge branch 'main' of ...」コミットが生まれるのを防ぐ。
+    ff = only
+
+# --- 表示・並び順 ---
+
+[branch]
+    # git branch を最終コミット日の新しい順に並べる（既定はアルファベット順）
+    sort = -committerdate
+
+[tag]
+    # タグをバージョン番号として正しく並べる（v1.10 が v1.9 の後に来る）
+    sort = version:refname
+
+[init]
+    # 新規リポジトリの既定ブランチ。Git for Windows のシステム設定は master
+    # だが、GitHub 側の既定は main。放置すると「手元は master、リモートは
+    # main」でずれるため、両OSとも main に揃える。
+    defaultBranch = main
+
+[commit]
+    # コミットメッセージ編集時に diff を一緒に表示する。
+    # 何をコミットしようとしているか確認しながら書ける。
+    verbose = true
+
+# --- 安全性 ---
+
+[transfer]
+    # fetch/push するオブジェクトの整合性を検証する。破損や細工された
+    # オブジェクトを受け入れないための保険。わずかに遅くなる。
+    fsckObjects = true
+
+[diff]
+    # patience の可読性と myers に近い速度を両立する。既定は myers。
+    algorithm = histogram
+
+    # 移動しただけの行を、追加/削除とは別の色で表示する。
+    # リファクタで関数を別の場所へ移すと、通常は「全削除＋全追加」に見えて
+    # 中身が変わったのか移しただけなのか判別できない。zebra は連続する移動
+    # ブロックを交互の色で塗り分ける。
+    colorMoved = zebra
+    # 移動判定でインデントの差を無視する。ネストが変わる移動（if で包む等）
+    # を移動として拾うため。
+    colorMovedWS = allow-indentation-change
+
+    # リネームに加えてコピーも検出する。
+    renames = copies
+
+    # 差分ヘッダの a/ b/ を i/（index）w/（worktree）c/（commit）にする。
+    # どちら側と比較しているのかが一目で分かる。
+    mnemonicPrefix = true
+
+    # diff.compactionHeuristic の正式版 indentHeuristic は 2.14 以降
+    # デフォルトで有効なため記述不要。
+
 [help]
     # タイポ時に確認を出す。値の単位は 0.1 秒で、1 だと 0.1 秒後に自動実行して
     # しまう（止める余地がない）。push/reset へ誤補正されると事故るため prompt。
@@ -81,11 +205,7 @@
     followTags = true
 
 [github]
-	user = rimoenic
-
-[diff]
-    algorithm           = histogram
+    user = rimoenic
 
 [ghq]
     vcs = git
-    # user = "rimoenic"

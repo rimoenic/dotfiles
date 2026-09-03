@@ -1,6 +1,7 @@
 # Windows固有のGit設定。common.gitconfig の後に読まれる。
 
 [credential]
+    # Git for Windows 同梱の Git Credential Manager。
     helper = manager
 
 [ghq]

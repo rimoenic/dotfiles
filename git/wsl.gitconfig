@@ -1,17 +1,20 @@
 # WSL(Linux)固有のGit設定。common.gitconfig の後に読まれる。
 
 [pager]
-    log  = diff-highlight | less -RX
-    show = diff-highlight | less -RX
-    diff = diff-highlight | less -RX
-    # diff = diff-so-fancy | less --tabs=4 -RFX
-    # diff = delta --dark --plus-color="#012800" --minus-color="#340001"
+    # diff-highlight は git 同梱の contrib スクリプト。Windows 側には無い。
+    #
+    # less のフラグ: -F は 1 画面に収まるなら pager を使わず直接出力する
+    # （短い diff で q を押す手間が消える）。-R は ANSI カラーをそのまま通す
+    # ため必須。-X は終了時に画面を消さない。
+    log  = diff-highlight | less -FRX
+    show = diff-highlight | less -FRX
+    diff = diff-highlight | less -FRX
+
+[diff]
+    tool = vimdiff
 
 [merge]
     tool = vimdiff
-
-[diff]
-    tool                = vimdiff
 
 [ghq]
     root = ~/src
