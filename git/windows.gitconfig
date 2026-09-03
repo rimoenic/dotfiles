@@ -1,0 +1,7 @@
+# Windows固有のGit設定。common.gitconfig の後に読まれる。
+
+[credential]
+    helper = manager
+
+[ghq]
+    root = ~/src

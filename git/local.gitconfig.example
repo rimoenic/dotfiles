@@ -1,0 +1,14 @@
+# git/local.gitconfig にコピーして使う。実体は .gitignore 済み。
+#
+# ユーザ情報を repo に入れないのは、会社用と個人用でメールアドレスが違い、
+# マシンによって既定を変えたいため。
+
+[user]
+    name  = Your Name
+    email = your@example.com
+
+# ディレクトリごとに使い分けたい場合は includeIf を使う。
+# ghq.root が ~/src なので、ホスト/オーナー単位で切り替えられる。
+#
+# [includeIf "gitdir:~/src/github.com/rimoenic/"]
+#     path = ~/.dotfiles/git/personal.gitconfig

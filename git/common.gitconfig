@@ -1,3 +1,6 @@
+# 両OS共通のGit設定。WSL側は home.nix の programs.git.includes から、
+# Windows側は setup.ps1 が配置する ~/.gitconfig の [include] から読まれる。
+
 [core]
     # pager = diff-so-fancy | less --tabs=4 -RFX
     # excludesfile = ~/.gitignore
@@ -44,27 +47,13 @@
     # `git config --global push.default simple`. See http://git.io/mMah-w.
     default = matching
 
-[pager]
-    log  = diff-highlight | less -RX
-    show = diff-highlight | less -RX
-    diff = diff-highlight | less -RX
-    # diff = diff-so-fancy | less --tabs=4 -RFX
-    # diff = delta --dark --plus-color="#012800" --minus-color="#340001"
+[github]
+	user = rimoenic
 
 [diff]
-    tool                = vimdiff
     algorithm           = histogram
     compactionHeuristic = true
 
 [ghq]
-    root = ~/src
     vcs = git
     # user = "rimoenic"
-
-[merge]
-    tool = vimdiff
-
-[github]
-	user = rimoenic
-
-

@@ -1,0 +1,17 @@
+# WSL(Linux)固有のGit設定。common.gitconfig の後に読まれる。
+
+[pager]
+    log  = diff-highlight | less -RX
+    show = diff-highlight | less -RX
+    diff = diff-highlight | less -RX
+    # diff = diff-so-fancy | less --tabs=4 -RFX
+    # diff = delta --dark --plus-color="#012800" --minus-color="#340001"
+
+[merge]
+    tool = vimdiff
+
+[diff]
+    tool                = vimdiff
+
+[ghq]
+    root = ~/src

@@ -8,3 +8,6 @@ windows/winget/winget_pkgs*.json
 .zsh/history/
 .config/antidote/state.json
 .tmux/*
+# git のユーザ情報。会社/個人でアドレスが違うため共有しない
+git/local.gitconfig
+git/personal.gitconfig
