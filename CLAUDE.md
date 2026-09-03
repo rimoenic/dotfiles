@@ -8,6 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - **レガシー**: `.zshrc`, `zsh/`, `nvim/`, `windows/`
 - **Nix/HM（推奨）**: `nix/flake.nix`, `nix/home.nix`
+- **両OS共通**: `git/` — Windows/WSL 双方から `include` する Git 設定（[git/README.md](git/README.md)）
 
 詳細は [doc/nix-patterns.md](doc/nix-patterns.md) / [doc/migration.md](doc/migration.md) を参照。
 

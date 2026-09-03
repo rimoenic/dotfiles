@@ -16,6 +16,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/rimoenic/dotfiles/master/doc
 nix/
   flake.nix     # Flakes 設定
   home.nix      # Home Manager メイン設定
+git/            # Git 設定（Windows/WSL 共通。include で読む）
 zsh/            # Zsh 設定（レガシー）
 nvim/           # Neovim 設定（レガシー）
 windows/        # WSL / Windows Terminal 設定
