@@ -14,6 +14,7 @@
 				{ "PackageIdentifier" : "sharkdp.fd" },
 				{ "PackageIdentifier" : "x-motemen.ghq" },
 				{ "PackageIdentifier" : "dandavison.delta" },
+				{ "PackageIdentifier" : "Neovim.Neovim" },
 				{ "PackageIdentifier" : "marlocarlo.psmux" },
 				{ "PackageIdentifier" : "wez.wezterm" },
 

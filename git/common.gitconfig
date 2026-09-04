@@ -37,6 +37,19 @@
 [core]
     preloadindex = true
 
+    # commit メッセージや rebase -i の todo を書くときに起動されるエディタ。
+    # GUI クライアント（VSCode の Source Control、GitExtensions 等）は
+    # commit -m 相当でメッセージを直接渡すため、この設定を経由しない。
+    # つまりここが効くのは CLI で -m を付けずに commit したときと rebase -i。
+    #
+    # 絶対パスは書かない。マシンごとに置き場所が違ううえ、repo に個人の
+    # ディレクトリ構成が残るため。両OSとも PATH から引く。
+    #
+    # GUI エディタを指す場合は「開いて即終了」しないよう待機オプションが要る
+    # （code --wait 等）。待たないと Git が空メッセージのまま先へ進む。
+    # nvim はターミナル内で完結するのでその問題が無い。
+    editor = nvim
+
     # 変換は一切しない（as-is）。CRLF で repo に入っているものは意図して
     # そう入れたものと見なし、そのまま取り出す。
     #
