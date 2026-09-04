@@ -143,7 +143,17 @@ function Backup-AndCopy {
         [string]$Dest
     )
 
+    # 中身が同じなら何もしない。毎回コピーすると、内容が変わっていなくても
+    # .orig が上書きされて「直前の状態」を失う。差分が無いのに退避すると
+    # 退避の意味も無いため、ハッシュで比較して同一なら noop にする。
     if (Test-Path $Dest) {
+        $srcHash  = (Get-FileHash -Path $Src  -Algorithm SHA256).Hash
+        $destHash = (Get-FileHash -Path $Dest -Algorithm SHA256).Hash
+        if ($srcHash -eq $destHash) {
+            Write-Host "Identical, skipping. ($Dest)"
+            return
+        }
+
         $backup = "$Dest.orig"
         Copy-Item $Dest $backup -Force
         Write-Host "Backed up: $Dest -> $backup"
