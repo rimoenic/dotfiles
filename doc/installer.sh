@@ -124,3 +124,4 @@ do
     ln -snfv "${SOURCE}" "$HOME/${val}"
 done
 
+ln -snfv "${DOTPATH}/git/global.ignore" "${HOME}/.config/git/ignore"
