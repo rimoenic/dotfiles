@@ -142,6 +142,7 @@ function Backup-AndCopy {
         [string]$Src,
         [string]$Dest
     )
+
     if (Test-Path $Dest) {
         $backup = "$Dest.orig"
         Copy-Item $Dest $backup -Force
@@ -196,24 +197,31 @@ if (!(Test-Path $wslconfigDest)) {
     Write-Host ".wslconfig already exists, skipping. ($wslconfigDest)"
 }
 
-# --- 6. .gitconfig ---
+# --- 6. git config ---
 # 設定本体は repo の git/*.gitconfig に置き、ここではそれを include するだけの
-# 薄い ~/.gitconfig を生成する。WSL 側（home.nix の programs.git.includes）も
-# 同じ common.gitconfig を読むので、共通部分の実体が一つに保たれる。
+# 薄い config を生成する。WSL 側（home.nix の programs.git）も同じ
+# common.gitconfig を読むので、共通部分の実体が一つに保たれる。
 #
-# 既存の ~/.gitconfig は上書きしない。手元で git config --global した内容が
-# 消えるため。その場合は下の include 行を手で足す。
-$gitRepoDir     = Split-Path $dotfilesWindows -Parent
-$gitconfigDest  = Join-Path $env:USERPROFILE '.gitconfig'
-$gitLocalSample = Join-Path $gitRepoDir 'git\local.gitconfig.example'
-$gitLocal       = Join-Path $gitRepoDir 'git\local.gitconfig'
+# 置き場所は ~/.config/git/config（XDG）にする。Home Manager が WSL 側で
+# 生成するのがこのパスなので、両OSで構成を揃えるため。Git for Windows も
+# この場所を global スコープとして読む。
+$gitRepoDir      = Split-Path $dotfilesWindows -Parent
+$gitConfigDir    = Join-Path $env:USERPROFILE '.config\git'
+$gitconfigDest   = Join-Path $gitConfigDir 'config'
+$gitconfigLegacy = Join-Path $env:USERPROFILE '.gitconfig'
+$gitLocalSample  = Join-Path $gitRepoDir 'git\local.gitconfig.example'
+$gitLocal        = Join-Path $gitRepoDir 'git\local.gitconfig'
 
 # include の path は Git が解釈するため、区切りは / に統一する。
 # Git for Windows はバックスラッシュをエスケープ文字として扱うため。
 $gitDirForward = $gitRepoDir.Replace('\', '/') + '/git'
 
+if (!(Test-Path $gitConfigDir)) {
+    New-Item -ItemType Directory -Path $gitConfigDir -Force | Out-Null
+}
+
 if (Test-Path $gitconfigDest) {
-    Write-Host ".gitconfig already exists, skipping. ($gitconfigDest)"
+    Write-Host "git config already exists, skipping. ($gitconfigDest)"
     Write-Host "NOTE: To use the shared config, add these lines manually:"
     Write-Host "  [include]"
     Write-Host "      path = $gitDirForward/common.gitconfig"
@@ -230,6 +238,17 @@ if (Test-Path $gitconfigDest) {
     path = $gitDirForward/local.gitconfig
 "@ | Set-Content -Path $gitconfigDest -Encoding utf8NoBOM
     Write-Host "Created: $gitconfigDest"
+}
+
+# ~/.gitconfig が残っていると、そちらが XDG 側より優先される（Git は XDG を
+# 先に読み、~/.gitconfig で上書きする）。生成した config が黙って無効化される
+# ため、消すかどうかは利用者が判断できるよう知らせるに留める。
+if (Test-Path $gitconfigLegacy) {
+    Write-Host ""
+    Write-Host "WARNING: $gitconfigLegacy still exists and TAKES PRECEDENCE over"
+    Write-Host "         $gitconfigDest"
+    Write-Host "         Move any machine-specific settings there, then delete it."
+    Write-Host ""
 }
 
 # ユーザ情報は repo に入れていないので、雛形から作って編集を促す。
