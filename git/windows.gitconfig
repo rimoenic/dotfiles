@@ -1,5 +1,17 @@
 # Windows固有のGit設定。common.gitconfig の後に読まれる。
 
+[core]
+    # 全リポジトリ共通の無視リスト。WSL 側は ~/.config/git/ignore（Git が
+    # 既定で見る場所）への symlink で済ませているが、Windows では symlink の
+    # 作成に管理者権限か開発者モードが要るため、設定から実体を直接指す。
+    # コピーではないので repo を更新すれば即反映される。
+    #
+    # ~ が使えるのは excludesFile が「パス」として扱われるため（config --path
+    # と同じ展開が効く）。環境変数は展開されないので $LOCALAPPDATA 等は不可。
+    # 下の mergetool.cmd で変数が使えるのは、あちらがシェル経由で実行される
+    # ためで、扱いが違う。
+    excludesFile = ~/.dotfiles/git/global.ignore
+
 [credential]
     # Git for Windows 同梱の Git Credential Manager。
     helper = manager
