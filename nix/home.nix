@@ -156,6 +156,7 @@ set shiftround
   home.packages = with pkgs; [
     ghq
     zsh
+    delta             # git の pager（git/common.gitconfig で core.pager に指定）
     awscli2
     aws-sam-cli
     uv

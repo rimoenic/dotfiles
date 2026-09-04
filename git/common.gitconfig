@@ -4,8 +4,9 @@
 # 素のINIで持つ。Nixで生成すると Windows 側が WSL の home-manager switch に
 # 依存してしまい、片方を更新しないともう片方が古いままになるため。
 #
-# ここには「どちらのOSでも同じ意味で動くもの」だけを置く。外部コマンドに
-# 依存するもの（pager, difftool）とパス（ghq.root）は各OS側のファイルへ。
+# ここには「どちらのOSでも同じ意味で動くもの」だけを置く。両OSに同じ実体を
+# 入れられない外部コマンド（difftool の vimdiff / WinMerge）とパス
+# （ghq.root）は各OS側のファイルへ。
 
 [alias]
     st = status
@@ -60,10 +61,10 @@
 
     # 行末の空白・空白混在の強調。Git 既定（赤背景）とほぼ同じ見た目。
     #
-    # なお pager に diff-highlight を挟んでいる間、この色は期待通りに出ない。
-    # diff-highlight が行内差分を reverse で強調し直すため、背景色が前景に
-    # 回って明るい塊になる。色を変えても回避できないので、確実に拾いたい
-    # ときは git diff --check を使う。delta に移行すれば解消する見込み。
+    # ただし pager が delta のとき、この値は使われない。delta は Git の
+    # 色付き出力を解釈せず自前で描き直すため、行末空白の表示は
+    # delta.whitespace-error-style が担う（下の [delta] を参照）。
+    # ここは delta を通さない経路（--no-pager, GUI 等）のために残す。
     whitespace = red reverse
 
     # 移動行の色（diff.colorMoved = zebra と対で使う）。
@@ -170,6 +171,9 @@
     # リファクタで関数を別の場所へ移すと、通常は「全削除＋全追加」に見えて
     # 中身が変わったのか移しただけなのか判別できない。zebra は連続する移動
     # ブロックを交互の色で塗り分ける。
+    #
+    # delta 経由では delta.map-styles が下の color.diff.*Moved を拾って
+    # 塗るので、この設定は両経路で効く。
     colorMoved = zebra
     # 移動判定でインデントの差を無視する。ネストが変わる移動（if で包む等）
     # を移動として拾うため。
@@ -184,6 +188,57 @@
 
     # diff.compactionHeuristic の正式版 indentHeuristic は 2.14 以降
     # デフォルトで有効なため記述不要。
+
+# --- pager（delta）---
+#
+# delta を pager に据える。以前は WSL 側だけ git 同梱の contrib スクリプト
+# diff-highlight を使っていたが、実体の場所が Git のバージョンやインストール
+# 方法で変わり、PATH を通し直す手間が続いた。delta は単体のバイナリなので
+# 両OSに同じ手段で入れられ、ここに共通設定として置ける。
+#
+# 行内差分の扱いも変わる。diff-highlight は Git の色付き出力に reverse を
+# 重ねるため color.diff.whitespace の背景色が潰れたが、delta は Git の出力を
+# 解釈して自前で描き直すのでその干渉が起きない。
+[core]
+    pager = delta
+
+[interactive]
+    # git add -p 等の対話 diff にも delta を通す。--color-only は
+    # 「色付けだけして構造は変えない」指定で、これが無いと Git が
+    # パッチを読み戻せずハンクを適用できなくなる。
+    diffFilter = delta --color-only
+
+[delta]
+    # 行番号を出す。delta を入れる主な利点のひとつ。
+    line-numbers = true
+
+    # ファイル名の見出しに区切り線を引く。どこからどのファイルか分かる。
+    file-style = "246"
+    file-decoration-style = "242 ul"
+    hunk-header-style = "239"
+    hunk-header-decoration-style = "none"
+
+    # 配色は色数を絞り、bold ではなく明暗で重要度を表す（color.diff と同じ考え）。
+    minus-style = "167"
+    plus-style = "030"
+    # 行内差分の強調。行全体より一段明るくして、変わった部分だけ目に入るようにする。
+    minus-emph-style = "167 52"
+    plus-emph-style = "030 22"
+    line-numbers-minus-style = "167"
+    line-numbers-plus-style = "030"
+    line-numbers-zero-style = "240"
+    # 行番号と本文の区切り。既定は青が入るため、他と同じ沈んだ灰に揃える。
+    line-numbers-left-style = "242"
+    line-numbers-right-style = "242"
+
+    # 行末空白の強調。color.diff.whitespace の代わりに delta 側で指定する。
+    whitespace-error-style = "reverse red"
+
+    # diff.colorMoved = zebra で Git が付けた移動行の色をそのまま活かす。
+    # delta は既定では Git の色を捨てて塗り直すため、map-styles で
+    # 「Git がこの色で出した行は、delta 側のこの色で描く」と対応付ける。
+    # 対応表の左辺は color.diff.*Moved の値と一致させること。
+    map-styles = "bold purple => syntax 96, bold cyan => syntax 66, bold magenta => syntax 132, bold blue => syntax 72"
 
 [help]
     # タイポ時に確認を出す。値の単位は 0.1 秒で、1 だと 0.1 秒後に自動実行して

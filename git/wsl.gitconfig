@@ -1,14 +1,6 @@
 # WSL(Linux)固有のGit設定。common.gitconfig の後に読まれる。
 
-[pager]
-    # diff-highlight は git 同梱の contrib スクリプト。Windows 側には無い。
-    #
-    # less のフラグ: -F は 1 画面に収まるなら pager を使わず直接出力する
-    # （短い diff で q を押す手間が消える）。-R は ANSI カラーをそのまま通す
-    # ため必須。-X は終了時に画面を消さない。
-    log  = diff-highlight | less -FRX
-    show = diff-highlight | less -FRX
-    diff = diff-highlight | less -FRX
+# pager（delta）は両OSで同じものを使うため common.gitconfig にある。
 
 [diff]
     tool = vimdiff

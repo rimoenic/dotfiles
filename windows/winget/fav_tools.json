@@ -13,6 +13,7 @@
 				{ "PackageIdentifier" : "junegunn.fzf" },
 				{ "PackageIdentifier" : "sharkdp.fd" },
 				{ "PackageIdentifier" : "x-motemen.ghq" },
+				{ "PackageIdentifier" : "dandavison.delta" },
 				{ "PackageIdentifier" : "marlocarlo.psmux" },
 				{ "PackageIdentifier" : "wez.wezterm" },
 
