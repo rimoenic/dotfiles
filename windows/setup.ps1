@@ -287,4 +287,31 @@ if (!(Test-Path $profileDir)) {
 }
 Backup-AndCopy $profileSrc $PROFILE
 
+# --- 9. 次にやること ---
+# ここまでで「設定」は済むが、ツール本体は入っていない。何をすれば環境が
+# 揃うのかを最後にまとめて示す。個別の NOTE は出力が流れて見落とすため。
+Write-Host ""
+Write-Host "=== setup.ps1 done ===" -ForegroundColor White
+Write-Host ""
+Write-Host "Next steps (run at your own timing):" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "  1. Restart the shell to load the new PowerShell profile."
+Write-Host ""
+Write-Host "  2. Install the tools. Not done here: 60+ packages is slow and"
+Write-Host "     you rarely want all of them on every machine."
+Write-Host ""
+Write-Host "       cd $dotfilesWindows"
+Write-Host "       .\install_fav_tools.ps1 -WhatIf   # check what would be installed"
+Write-Host "       .\install_fav_tools.ps1           # install"
+Write-Host ""
+Write-Host "     Machine-specific ones (drivers, peripherals) are opt-in."
+Write-Host "     Edit the manifest first, then:"
+Write-Host ""
+Write-Host "       .\install_fav_tools.ps1 -ManifestPath machine_dependent.json -WhatIf"
+Write-Host ""
+Write-Host "     See windows/README.md for what each manifest holds."
+Write-Host ""
+Write-Host "  3. Set up the WSL side: run installer.sh inside WSL."
+Write-Host ""
+
 #endregion
