@@ -33,7 +33,7 @@ winget export -o .\winget\winget_pkgs.json
 
 `-ManifestPath` はファイル名だけでも渡せる（`winget/` から解決される）。
 
-3 ファイルの宣言は計 70 件で、重複はない。実際に導入しているもののうち、
+3 ファイルの宣言は計 73 件で、重複はない。実際に導入しているもののうち、
 依存ランタイムなど宣言していないものについては「宣言していないもの」を参照。
 
 `setup.ps1` からは呼ばない。数が多く重いため、必要なときだけ明示的に叩く。
@@ -66,6 +66,50 @@ winget export -o .\winget\winget_pkgs.json
 | `Dell.DisplayAndPeripheralManager` | Dell 製ディスプレイ・周辺機器 |
 | `Intel.IntelExtremeTuningUtility` | Intel CPU のチューニング |
 | `Logitech.UnifyingSoftware` | Logicool Unifying レシーバー |
+| `Microsoft.Sysinternals.Ctrl2Cap` | Ctrl と Caps Lock を入れ替えられないキーボード（下記） |
+
+#### Ctrl2Cap
+
+Caps Lock を Ctrl として使うためのリマッパ。
+キーボード側（ハード/ファームウェア）で入れ替えられるならそちらを使う。
+ノート PC の内蔵キーボードのように、それができないマシンでだけ入れる。
+
+v3.0 でドライバ方式をやめ、レジストリの Scancode Map 方式になった
+（v2.x の `.sys` を登録する版とは別物。zip に `.sys` は入っていない）。
+書き込み先は次の 1 箇所だけで、Caps Lock (0x3A) を左 Ctrl (0x1D) に割り当てる。
+
+```
+HKLM\SYSTEM\CurrentControlSet\Control\Keyboard Layout  →  Scancode Map
+```
+
+winget で入るのは実行ファイルだけで、**それだけでは効かない**。
+HKLM 配下のため書き込みに管理者権限が要り、反映にはサインアウトが要る
+（Scancode Map の読み込みがログオン時のため。ドライバ方式と違い再起動までは不要）。
+
+```powershell
+# 管理者の PowerShell で
+ctrl2cap /install
+# サインアウト（または再起動）で有効になる
+
+# 既に別のキーへ割り当て済みの場合は上書きしない。上書きするなら /force
+ctrl2cap /install /force
+
+# やめるとき
+ctrl2cap /uninstall
+```
+
+現在の状態はレジストリを直接見れば分かる。値が無ければ未設定。
+
+```powershell
+(Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Keyboard Layout').'Scancode Map'
+```
+
+Scancode Map は Ctrl2Cap 専用の値ではなく、キーリマップ全体で共有する 1 つの値。
+そのため Ctrl2Cap を入れずに手で同じ値を書いても等価で、逆に他のリマップ設定と
+競合しうる。`ctrl2cap /uninstall` は値ごと消すので、他の割り当ても一緒に失われる。
+
+`setup.ps1` からは行わない。管理者権限とサインアウトが要るうえ、
+入れるかどうかがマシンの判断になるため、手作業に残す。
 
 ### optional_tools.json の内訳
 

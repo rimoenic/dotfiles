@@ -13,7 +13,9 @@
 
 				{ "PackageIdentifier" : "Intel.IntelExtremeTuningUtility" },
 
-				{ "PackageIdentifier" : "Logitech.UnifyingSoftware", "Scope" : "machine" }
+				{ "PackageIdentifier" : "Logitech.UnifyingSoftware", "Scope" : "machine" },
+
+				{ "PackageIdentifier" : "Microsoft.Sysinternals.Ctrl2Cap" }
 			],
 			"SourceDetails" :
 			{
