@@ -12,6 +12,26 @@
   # Home Manager自身を有効化
   programs.home-manager.enable = true;
 
+  # home.packages のフォントは fontconfig を有効にしないと
+  # アプリ側から参照されない（WSLg 上の GUI アプリや fcitx5 が対象）。
+  fonts.fontconfig = {
+    enable = true;
+
+    # Windows 側のフォントを WSL から共有する。
+    # /etc/fonts/local.conf を手で編集していたのを Home Manager 管理に移した。
+    # 存在しない dir は fontconfig が黙って無視するので、
+    # /mnt/c が無い環境でも条件分岐は不要。
+    configFile.wsl-windows-fonts = {
+      enable = true;
+      priority = 10;
+      settings = {
+        description = "Use fonts installed on the Windows host";
+        dir = "/mnt/c/Windows/Fonts";
+      };
+    };
+  };
+
+
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [
       "obsidian"
@@ -181,7 +201,9 @@ set shiftround
     whois
     zip
     unzip
-    noto-fonts        # 日本語フォント
+    noto-fonts-cjk-sans   # 日本語フォント
+    noto-fonts-cjk-serif  # 日本語フォント
+    nerd-fonts.caskaydia-cove
     obsidian          # ノートアプリ（WSLg必要）
     apacheHttpd       # htpasswd等のユーティリティ
     jsonnet
