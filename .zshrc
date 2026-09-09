@@ -95,7 +95,7 @@ bindkey '^]' ghq-fzf
 
 
 function ssh-fzf () {
-  local selected_host=$(grep "Host " ~/.ssh/config | grep -v '\*' | cut -b 6- | sort | uniq | fzf --query "$LBUFFER")
+    local selected_host=$(grep -h "Host " ~/.ssh/config.d/hosts* | grep -v '\*' | cut -b 6- | sed 's/^\(.*\) +\(.*\)/\1\n\2/g' | sort | uniq | fzf --query "$LBUFFER")
 
   if [ -n "$selected_host" ]; then
     BUFFER="ssh ${selected_host}"
