@@ -125,14 +125,7 @@ fi
 
 alias hms='home-manager switch --flake "${DOTFILESPATH}/nix#default" --impure'
 
-
-#PATH重複排除 末尾で実行
-typeset -U path
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-
+# node(nvm)はnixで管理するかdevboxを試すようにするか
 export SAM_CLI_TELEMETRY=0
 
 
@@ -152,3 +145,9 @@ fi
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
+
+
+
+#PATH重複排除 末尾で実行
+typeset -U path
