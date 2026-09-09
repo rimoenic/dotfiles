@@ -35,13 +35,18 @@ if ! ssh_agent_is_available; then
 fi
 
 
- 
+
 # copy to clipboard for cygwin
 alias -g CLIP="| powershell.exe -Command clip.exe" 
 
-export GOPATH="$HOME/.go"
-export PATH="$HOME/bin:${PATH}"
-export PATH="$GOPATH/bin:${PATH}:/usr/local/go/bin:"
+if [ -d "${HOME}/bin" ] ; then
+    export PATH="${PATH}:${HOME}/bin"
+fi
+
+export GOPATH="${HOME}/.go"
+if [ -d "${GOPATH}/bin" ] ; then
+    PATH="${PATH}:${GOPATH}/.go/bin"
+fi
 
 export LANG=en_US.UTF-8
 export EDITOR=vi
