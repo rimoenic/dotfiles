@@ -1,7 +1,16 @@
 { config, pkgs, lib, ... }:
 
-
+let
+  # WSL は WSL_DISTRO_NAME を必ず設定する。既に USER/HOME を getEnv して
+  # おり --impure 前提なので、判定コストは追加で発生しない。
+  isWSL = builtins.getEnv "WSL_DISTRO_NAME" != "";
+in
 {
+  # プラットフォーム固有の設定を切り替える。
+  imports =
+    lib.optional isWSL ./wsl.nix
+    ++ lib.optional (!isWSL) ./linux.nix;
+
   # ユーザー情報（環境変数から動的に取得）
   home.username = builtins.getEnv "USER";
   home.homeDirectory = builtins.getEnv "HOME";
@@ -13,25 +22,12 @@
   programs.home-manager.enable = true;
 
   # home.packages のフォントは fontconfig を有効にしないと
-  # アプリ側から参照されない（WSLg 上の GUI アプリや fcitx5 が対象）。
-  fonts.fontconfig = {
-    enable = true;
+  # アプリ側から参照されない。フォントの実体は環境によって異なるため
+  # 個別の dir 追加や defaultFonts は wsl.nix / linux.nix 側で行う。
+  fonts.fontconfig.enable = true;
 
-    # Windows 側のフォントを WSL から共有する。
-    # /etc/fonts/local.conf を手で編集していたのを Home Manager 管理に移した。
-    # 存在しない dir は fontconfig が黙って無視するので、
-    # /mnt/c が無い環境でも条件分岐は不要。
-    configFile.wsl-windows-fonts = {
-      enable = true;
-      priority = 10;
-      settings = {
-        description = "Use fonts installed on the Windows host";
-        dir = "/mnt/c/Windows/Fonts";
-      };
-    };
-  };
-
-  # 日本語入力（WSLg 上の Obsidian 等の GUI アプリ向け）。
+  # 日本語入力（GUI アプリ向け）。Wayland/X11 の経路差と
+  # デーモン起動方法は wsl.nix / linux.nix 側で調整する。
   # fcitx5-mozc を home.packages に置くだけでは、IM モジュールの環境変数も
   # fcitx5 デーモンも設定されず変換が始まらないので i18n.inputMethod を使う。
   i18n.inputMethod = {
@@ -40,13 +36,35 @@
     fcitx5 = {
       addons = [ pkgs.fcitx5-mozc ];
 
-      # WSLg は Wayland なので Wayland フロントエンドを有効にする。
-      # obsidian ラッパーが --wayland-text-input-version=3 を付けるため、
-      # fcitx5 側が text-input プロトコルを話せないと繋がらない。
-      # このモジュールは waylandFrontend = true のとき GTK_IM_MODULE を外す
-      # 代わりに gtk*.extraConfig で gtk-im-module を設定するので、
-      # XWayland の GTK アプリも従来通り動く。
-      waylandFrontend = true;
+      # 旧 ~/.config/fcitx5/config から移植。既定値と同じ項目は書かず、
+      # 実際に効いていた設定だけ残す（Hangul 系は韓国語用なので省略）。
+      settings.globalOptions = {
+        Hotkey = {
+          EnumerateWithTriggerKeys = true;
+          EnumerateSkipFirst = false;
+        };
+        # 全角/半角キーでも切り替えられるようにする。
+        "Hotkey/TriggerKeys"."0" = "Control+space";
+        "Hotkey/TriggerKeys"."1" = "Zenkaku_Hankaku";
+        "Hotkey/AltTriggerKeys"."0" = "Shift_L";
+        # Tab/Shift+Tab で候補選択、Up/Down でページ送り。
+        "Hotkey/PrevCandidate"."0" = "Shift+Tab";
+        "Hotkey/NextCandidate"."0" = "Tab";
+        "Hotkey/PrevPage"."0" = "Up";
+        "Hotkey/NextPage"."0" = "Down";
+        "Hotkey/TogglePreedit"."0" = "Control+Alt+P";
+
+        Behavior = {
+          # 起動直後は直接入力。Ctrl+Space で日本語に入る運用。
+          ActiveByDefault = false;
+          ShareInputState = "No";
+          PreeditEnabledByDefault = true;
+          ShowInputMethodInformation = true;
+          CompactInputMethodInformation = true;
+          DefaultPageSize = 5;
+          PreloadInputMethod = true;
+        };
+      };
 
       settings.inputMethod = {
         GroupOrder."0" = "Default";
@@ -56,16 +74,12 @@
           DefaultIM = "mozc";
         };
         # 直接入力を先頭に置き、Ctrl+Space で mozc に切り替える。
+        # 旧 profile にあった Layout= (空) はグループ既定を使う意味なので省略。
         "Groups/0/Items/0".Name = "keyboard-us";
         "Groups/0/Items/1".Name = "mozc";
       };
     };
   };
-
-  # nixpkgs の obsidian ラッパーは NIXOS_OZONE_WL と WAYLAND_DISPLAY の
-  # 両方が立っているときだけ --enable-wayland-ime を付ける。
-  # これが無いと Electron が fcitx5 と繋がらず日本語が入力できない。
-  home.sessionVariables.NIXOS_OZONE_WL = "1";
 
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [
