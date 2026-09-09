@@ -148,6 +148,17 @@ set shiftround
     '';
   };
 
+  # cliツール
+  programs.bat.enable = true;   # alter. cat
+  #programs.delta.enable = true; # git の pager（git/common.gitconfig で core.pager に指定）
+  programs.eza.enable = true;   # alter. ls
+  programs.fd.enable = true;    # alter. find
+  #programs.jq.enable = true;    # JSON処理
+  #programs.pazi.enable = true;
+  #programs.pet.enable = true;  # command snippet
+
+
+
   # 開発ツール
   programs.fzf.enable = true;
   programs.direnv.enable = true;
