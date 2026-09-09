@@ -150,32 +150,32 @@ set shiftround
 
   # cliツール
   programs.bat.enable = true;   # alter. cat
-  #programs.delta.enable = true; # git の pager（git/common.gitconfig で core.pager に指定）
+  programs.delta.enable = true; # git の pager（git/common.gitconfig で core.pager に指定）
   programs.eza.enable = true;   # alter. ls
   programs.fd.enable = true;    # alter. find
-  #programs.jq.enable = true;    # JSON処理
+  programs.jq.enable = true;    # JSON処理
   #programs.pazi.enable = true;
   #programs.pet.enable = true;  # command snippet
-
-
 
   # 開発ツール
   programs.fzf.enable = true;
   programs.direnv.enable = true;
+  programs.uv.enable = true;
+
+  # その他
+  programs.awscli.enable = true;
+  #programs.obsidian.enable = true;
+
 
   # ghq/zshはHome Managerのprogramsにないので、packagesで管理
   home.packages = with pkgs; [
     ghq
     zsh
-    delta             # git の pager（git/common.gitconfig で core.pager に指定）
-    awscli2
     aws-sam-cli
-    uv
     tenv              # terraform version manager
     ruby              # roadworker gem のため
     dig               # DNS lookup (bind9-dnsutils相当)
     fq                # バイナリフォーマット解析
-    jq                # JSON処理
     nkf               # 文字コード変換
     pwgen             # パスワード生成
     whois
