@@ -182,6 +182,7 @@ set shiftround
     subversion
     qrencode
     jc                # JSON化CLIツール
+    rclone
   ];
 
   # Zsh設定は既存の.zshrcを使用するため、Home Managerでは管理しない
