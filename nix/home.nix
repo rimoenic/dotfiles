@@ -31,6 +31,41 @@
     };
   };
 
+  # 日本語入力（WSLg 上の Obsidian 等の GUI アプリ向け）。
+  # fcitx5-mozc を home.packages に置くだけでは、IM モジュールの環境変数も
+  # fcitx5 デーモンも設定されず変換が始まらないので i18n.inputMethod を使う。
+  i18n.inputMethod = {
+    enable = true;
+    type = "fcitx5";
+    fcitx5 = {
+      addons = [ pkgs.fcitx5-mozc ];
+
+      # WSLg は Wayland なので Wayland フロントエンドを有効にする。
+      # obsidian ラッパーが --wayland-text-input-version=3 を付けるため、
+      # fcitx5 側が text-input プロトコルを話せないと繋がらない。
+      # このモジュールは waylandFrontend = true のとき GTK_IM_MODULE を外す
+      # 代わりに gtk*.extraConfig で gtk-im-module を設定するので、
+      # XWayland の GTK アプリも従来通り動く。
+      waylandFrontend = true;
+
+      settings.inputMethod = {
+        GroupOrder."0" = "Default";
+        "Groups/0" = {
+          Name = "Default";
+          "Default Layout" = "us";
+          DefaultIM = "mozc";
+        };
+        # 直接入力を先頭に置き、Ctrl+Space で mozc に切り替える。
+        "Groups/0/Items/0".Name = "keyboard-us";
+        "Groups/0/Items/1".Name = "mozc";
+      };
+    };
+  };
+
+  # nixpkgs の obsidian ラッパーは NIXOS_OZONE_WL と WAYLAND_DISPLAY の
+  # 両方が立っているときだけ --enable-wayland-ime を付ける。
+  # これが無いと Electron が fcitx5 と繋がらず日本語が入力できない。
+  home.sessionVariables.NIXOS_OZONE_WL = "1";
 
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [
@@ -216,6 +251,7 @@ set shiftround
     qrencode
     jc                # JSON化CLIツール
     rclone
+    graphviz
   ];
 
   # Zsh設定は既存の.zshrcを使用するため、Home Managerでは管理しない

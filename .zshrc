@@ -117,6 +117,12 @@ export PATH="$HOME/.serverless/bin:$PATH"
 
 if [ -e "${HOME}/.nix-profile/etc/profile.d/nix.sh" ]; then . "${HOME}/.nix-profile/etc/profile.d/nix.sh"; fi # added by Nix installer
 
+# Home Manager の home.sessionVariables（IME 関連の環境変数など）。
+# __HM_SESS_VARS_SOURCED を見て二重読み込みを避ける実装になっている。
+if [ -e "${HOME}/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
+  . "${HOME}/.nix-profile/etc/profile.d/hm-session-vars.sh"
+fi
+
 alias hms='home-manager switch --flake "${DOTFILESPATH}/nix#default" --impure'
 
 
