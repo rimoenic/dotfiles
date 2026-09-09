@@ -11,6 +11,8 @@
     # 下の mergetool.cmd で変数が使えるのは、あちらがシェル経由で実行される
     # ためで、扱いが違う。
     excludesFile = ~/.dotfiles/git/global.ignore
+    # windows では chmod するのが難しく差分吸収が難しい
+    filemode = false
 
 [credential]
     # Git for Windows 同梱の Git Credential Manager。
