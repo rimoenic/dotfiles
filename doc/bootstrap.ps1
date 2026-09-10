@@ -314,6 +314,75 @@ function Install-WingetPackage {
 
 #endregion
 
+#region ---------- WSLENV ----------
+
+# WSLENV に指定のエントリを恒久登録する（ユーザー環境変数）。
+#
+# setx は使わない。値が 1024 文字で切れるうえ、既存値を読んで自前で結合する
+# 手間は [Environment]::SetEnvironmentVariable と変わらないため。
+#
+# 上書きではなく既存値へのマージにする。WSLENV は他のツールも追記する共有の
+# 変数で、丸ごと置き換えると他の設定を黙って壊すため。
+function Add-WslEnvEntry {
+    param([string[]]$Entries)
+
+    Write-Step 'WSLENV（ユーザー環境変数）'
+
+    # Machine ではなく User に書く。WSLENV は「このユーザーの WSL セッションに
+    # 何を引き渡すか」の設定で、マシン全体の設定ではないため。
+    #
+    # プロセスの $env:WSLENV を読んではいけない。Windows Terminal は起動する
+    # 子プロセスの WSLENV に WT_SESSION:WT_PROFILE_ID を追記するため（実測済み。
+    # 永続値は書き換えずプロセス単位で足す）、プロセス値を読んで書き戻すと
+    # セッション限りの値をユーザー環境変数に焼き付けてしまう。
+    $current = [Environment]::GetEnvironmentVariable('WSLENV', 'User')
+    if (-not $current) { $current = '' }
+
+    # ':' 区切り。空要素は既存値の前後/連続する ':' から生じるので落とす。
+    $existing = @($current -split ':' | Where-Object { $_ })
+
+    $added = @()
+    foreach ($entry in $Entries) {
+        # 変数名だけで比較する。'USERPROFILE/p' と 'USERPROFILE/pu' は
+        # 同じ変数の別フラグ指定であり、文字列一致だと重複登録になるため。
+        $name = ($entry -split '/')[0]
+        $dup  = $existing | Where-Object { ($_ -split '/')[0] -eq $name }
+
+        if ($dup) {
+            Write-Skip "$entry は登録済み（現在: $dup）。スキップします。"
+            continue
+        }
+
+        $existing += $entry
+        $added    += $entry
+    }
+
+    if ($added.Count -eq 0) {
+        Write-Ok "WSLENV は既に設定済みです（$($existing -join ':')）。"
+        return $true
+    }
+
+    $new = $existing -join ':'
+
+    try {
+        [Environment]::SetEnvironmentVariable('WSLENV', $new, 'User')
+    } catch {
+        Write-Warn "WSLENV の登録に失敗しました: $($_.Exception.Message)"
+        Add-NextAction "ユーザー環境変数 WSLENV に ``$($added -join ':')`` を手動で追加してください。"
+        return $false
+    }
+
+    # 現プロセスにも反映する。ユーザー環境変数は既存プロセスに伝播しないため、
+    # ここで入れておかないと後段の wsl.exe / installer.sh に引き渡されない。
+    # （installer.sh は $WSLENV の有無で WSL 判定をしている）
+    $env:WSLENV = $new
+
+    Write-Ok "WSLENV に $($added -join ':') を追加しました（現在: $new）。"
+    return $true
+}
+
+#endregion
+
 #region ---------- dotfiles 取得 ----------
 
 # repo 全体は落とさない。bootstrap は単体で落ちてくる想定で、repo 本体の clone は
@@ -356,7 +425,15 @@ if (-not (Test-Administrator)) {
     Write-Host ''
 }
 
-# --- 1. WSL 本体 → ディストロ ---
+# --- 1. WSLENV ---
+# WSL の起動より前に設定する。WSLENV は wsl.exe 起動時に読まれるため、
+# 後回しにすると同一実行内で起動した installer.sh に引き渡されない。
+#
+# USERPROFILE/up: Windows の %USERPROFILE% を WSL 側にパス変換して渡す指定。
+# WSL 側から Windows のホーム（ssh 鍵や git 設定）を参照するために要る。
+Add-WslEnvEntry -Entries @('USERPROFILE/up') | Out-Null
+
+# --- 2. WSL 本体 → ディストロ ---
 $coreReady = Install-WslCore
 if ($coreReady) {
     $distroReady = Install-WslDistro -Name $Distro
@@ -366,7 +443,7 @@ if ($coreReady) {
     $distroReady = $false
 }
 
-# --- 2. PowerShell 7 ---
+# --- 3. PowerShell 7 ---
 # setup.ps1 の実行より前に入れておく。後回しにすると、7 で走らせたい setup.ps1 を
 # 5.1 で走らせることになるため（setup.ps1 を将来 7 前提に書き直す想定）。
 if (-not $SkipPwsh7) {
@@ -377,7 +454,7 @@ if (-not $SkipPwsh7) {
     Write-Skip '-SkipPwsh7 が指定されたためスキップします。'
 }
 
-# --- 3. Windows 側の設定 ---
+# --- 4. Windows 側の設定 ---
 if (-not $SkipWindowsSetup) {
     Write-Step 'Windows 側の設定 (setup.ps1)'
 
@@ -424,7 +501,7 @@ if (-not $SkipWindowsSetup) {
     Write-Skip '-SkipWindowsSetup が指定されたためスキップします。'
 }
 
-# --- 4. WSL 側の installer.sh ---
+# --- 5. WSL 側の installer.sh ---
 Write-Step "WSL 側のセットアップ (installer.sh)"
 
 $installerCmd = "bash <(curl -fsSL $RawBase/doc/installer.sh)"
