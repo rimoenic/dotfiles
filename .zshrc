@@ -90,9 +90,23 @@ function ghq-fzf() {
 
   zle reset-prompt
 }
-zle -N ghq-fzf
-bindkey '^]' ghq-fzf
+function ghq-fzf-wsl() {
+  local selected_dir=$(ghq.exe list | fzf --query="$LBUFFER")
 
+  if [ -n "$selected_dir" ]; then
+    BUFFER="cd $(wslpath "$(ghq.exe root)/${selected_dir}")"
+    zle accept-line
+  fi
+
+  zle reset-prompt
+}
+if [ ! -z "${WSLENV}" ]; then
+  zle -N ghq-fzf-wsl
+  bindkey '^]' ghq-fzf-wsl
+else
+  zle -N ghq-fzf
+  bindkey '^]' ghq-fzf
+fi
 
 function ssh-fzf () {
     local selected_host=$(grep -h "Host " ~/.ssh/config.d/hosts* | grep -v '\*' | cut -b 6- | sed 's/^\(.*\) +\(.*\)/\1\n\2/g' | sort | uniq | fzf --query "$LBUFFER")
