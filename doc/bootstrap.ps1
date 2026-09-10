@@ -17,7 +17,7 @@ param(
     # 'Ubuntu' ではなくバージョン付きを既定にする。'Ubuntu' はメタパッケージで
     # どの版が入るか Windows 側の都合で変わり、再現性がないため。
     # wsl --list --online の Name 列と一致していないと導入に失敗する。
-    [string]$Distro = 'Ubuntu-24.04',
+    [string]$Distro = 'Ubuntu-26.04',
 
     [string]$RepoOwner = 'rimoenic',
     [string]$RepoName  = 'dotfiles',
