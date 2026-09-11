@@ -1,24 +1,21 @@
 {
-        "$schema" : "https://aka.ms/winget-packages.schema.2.0.json",
-        "CreationDate" : "2026-09-11T10:01:28.784-00:00",
-        "Sources" :
-        [
-                {
-                        "Packages" :
-                        [
-                                {
-                                        "PackageIdentifier" : "ryanoasis.CaskaydiaCove",
-                                        "Version" : "3.4.0"
-                                }
-                        ],
-                        "SourceDetails" :
-                        {
-                                "Argument" : "https://cdn.winget.microsoft.com/fonts",
-                                "Identifier" : "Microsoft.Winget.Fonts.Source_8wekyb3d8bbwe",
-                                "Name" : "winget-font",
-                                "Type" : "Microsoft.PreIndexed.Package"
-                        }
-                }
-        ],
-        "WinGetVersion" : "1.29.290"
+    "$schema" : "https://aka.ms/winget-packages.schema.2.0.json",
+    "CreationDate" : "2026-09-11T10:01:28.784-00:00",
+    "Sources" :
+    [
+        {
+            "Packages" :
+            [
+                { "PackageIdentifier" : "ryanoasis.CaskaydiaCove", "Scode" : "machine" }
+            ],
+            "SourceDetails" :
+            {
+                "Argument" : "https://cdn.winget.microsoft.com/fonts",
+                "Identifier" : "Microsoft.Winget.Fonts.Source_8wekyb3d8bbwe",
+                "Name" : "winget-font",
+                "Type" : "Microsoft.PreIndexed.Package"
+            }
+        }
+    ],
+    "WinGetVersion" : "1.29.290"
 }
