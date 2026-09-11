@@ -1,0 +1,726 @@
+# Created using winget configure export 1.29.290
+# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.3
+$schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2023/08/config/document.json
+metadata:
+  winget:
+    processor:
+      identifier: "dscv3"
+resources:
+- name: winget_Microsoft.PreIndexed.Package
+  type: Microsoft.WinGet/Source
+  metadata:
+    description: "winget_Microsoft.PreIndexed.Package \u306E\u69CB\u6210"
+    winget:
+      securityContext: "elevated"
+  properties:
+    type: "Microsoft.PreIndexed.Package"
+    trustLevel: "trusted"
+    argument: "https://cdn.winget.microsoft.com/cache"
+    name: "winget"
+- name: msstore_Microsoft.Rest
+  type: Microsoft.WinGet/Source
+  metadata:
+    description: "msstore_Microsoft.Rest \u306E\u69CB\u6210"
+    winget:
+      securityContext: "elevated"
+  properties:
+    type: "Microsoft.Rest"
+    trustLevel: "trusted"
+    argument: "https://storeedgefd.dsx.mp.microsoft.com/v9.0"
+    name: "msstore"
+- name: winget_7zip.7zip
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "7zip.7zip \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "7zip.7zip"
+    source: "winget"
+- name: winget_Audacity.Audacity
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Audacity.Audacity \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Audacity.Audacity"
+    source: "winget"
+- name: winget_CPUID.CPU-Z
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "CPUID.CPU-Z \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "CPUID.CPU-Z"
+    source: "winget"
+- name: winget_CPUID.HWMonitor
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "CPUID.HWMonitor \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "CPUID.HWMonitor"
+    source: "winget"
+- name: winget_CrystalDewWorld.CrystalDiskInfo
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "CrystalDewWorld.CrystalDiskInfo \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "CrystalDewWorld.CrystalDiskInfo"
+    source: "winget"
+- name: winget_CrystalDewWorld.CrystalDiskMark
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "CrystalDewWorld.CrystalDiskMark \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "CrystalDewWorld.CrystalDiskMark"
+    source: "winget"
+- name: winget_Piriform.Defraggler
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Piriform.Defraggler \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Piriform.Defraggler"
+    source: "winget"
+- name: winget_Docker.DockerDesktop
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Docker.DockerDesktop \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Docker.DockerDesktop"
+    source: "winget"
+- name: winget_FireAlpaca.FireAlpaca
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "FireAlpaca.FireAlpaca \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "FireAlpaca.FireAlpaca"
+    source: "winget"
+- name: winget_Git.Git
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Git.Git \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Git.Git"
+    source: "winget"
+- name: winget_REALiX.HWiNFO
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "REALiX.HWiNFO \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "REALiX.HWiNFO"
+    source: "winget"
+- name: winget_IrfanSkiljan.IrfanView
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "IrfanSkiljan.IrfanView \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "IrfanSkiljan.IrfanView"
+    source: "winget"
+- name: winget_Logitech.UnifyingSoftware
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Logitech.UnifyingSoftware \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Logitech.UnifyingSoftware"
+    source: "winget"
+- name: winget_Mozilla.Thunderbird.ja
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Mozilla.Thunderbird.ja \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Mozilla.Thunderbird.ja"
+    source: "winget"
+- name: winget_VideoLAN.VLC
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "VideoLAN.VLC \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "VideoLAN.VLC"
+    source: "winget"
+- name: winget_AntibodySoftware.WizTree
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "AntibodySoftware.WizTree \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "AntibodySoftware.WizTree"
+    source: "winget"
+- name: winget_Zen-Team.Zen-Browser
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Zen-Team.Zen-Browser \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Zen-Team.Zen-Browser"
+    source: "winget"
+- name: winget_OpenVPNTechnologies.OpenVPN
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "OpenVPNTechnologies.OpenVPN \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "OpenVPNTechnologies.OpenVPN"
+    source: "winget"
+- name: winget_JanDeDobbeleer.OhMyPosh
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "JanDeDobbeleer.OhMyPosh \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "JanDeDobbeleer.OhMyPosh"
+    source: "winget"
+- name: winget_TeraTermProject.teraterm5
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "TeraTermProject.teraterm5 \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "TeraTermProject.teraterm5"
+    source: "winget"
+- name: winget_Neovim.Neovim
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Neovim.Neovim \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Neovim.Neovim"
+    source: "winget"
+- name: winget_Amazon.AWSCLI
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Amazon.AWSCLI \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Amazon.AWSCLI"
+    source: "winget"
+- name: winget_TheDocumentFoundation.LibreOffice
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "TheDocumentFoundation.LibreOffice \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "TheDocumentFoundation.LibreOffice"
+    source: "winget"
+- name: winget_KeePassXCTeam.KeePassXC
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "KeePassXCTeam.KeePassXC \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "KeePassXCTeam.KeePassXC"
+    source: "winget"
+- name: winget_GoLang.Go
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "GoLang.Go \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "GoLang.Go"
+    source: "winget"
+- name: winget_Google.GoogleDrive
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Google.GoogleDrive \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Google.GoogleDrive"
+    source: "winget"
+- name: winget_PDFsam.PDFsam
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "PDFsam.PDFsam \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "PDFsam.PDFsam"
+    source: "winget"
+- name: winget_PFOJEnterprisesLLC.ModernCSV
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "PFOJEnterprisesLLC.ModernCSV \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "PFOJEnterprisesLLC.ModernCSV"
+    source: "winget"
+- name: winget_WireGuard.WireGuard
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "WireGuard.WireGuard \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "WireGuard.WireGuard"
+    source: "winget"
+- name: winget_Google.QuickShare
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Google.QuickShare \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Google.QuickShare"
+    source: "winget"
+- name: winget_Adobe.Acrobat.Reader.64-bit
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Adobe.Acrobat.Reader.64-bit \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Adobe.Acrobat.Reader.64-bit"
+    source: "winget"
+- name: winget_wez.wezterm
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "wez.wezterm \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "wez.wezterm"
+    source: "winget"
+- name: winget_dotPDN.PaintDotNet
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "dotPDN.PaintDotNet \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "dotPDN.PaintDotNet"
+    source: "winget"
+- name: winget_Netsdk.S3Browser
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Netsdk.S3Browser \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Netsdk.S3Browser"
+    source: "winget"
+- name: winget_Oracle.VirtualBox
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Oracle.VirtualBox \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Oracle.VirtualBox"
+    source: "winget"
+- name: winget_Wagnardsoft.DisplayDriverUninstaller
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Wagnardsoft.DisplayDriverUninstaller \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Wagnardsoft.DisplayDriverUninstaller"
+    source: "winget"
+- name: winget_Foxit.FoxitReader.Inno
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Foxit.FoxitReader.Inno \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Foxit.FoxitReader.Inno"
+    source: "winget"
+- name: winget_Google.Chrome.Beta.EXE
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Google.Chrome.Beta.EXE \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Google.Chrome.Beta.EXE"
+    source: "winget"
+- name: winget_Insecure.Nmap
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Insecure.Nmap \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Insecure.Nmap"
+    source: "winget"
+- name: winget_Lenovo.SystemUpdate
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Lenovo.SystemUpdate \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Lenovo.SystemUpdate"
+    source: "winget"
+- name: winget_Lenovo.UpdateRetriever
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Lenovo.UpdateRetriever \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Lenovo.UpdateRetriever"
+    source: "winget"
+- name: winget_WiresharkFoundation.Wireshark
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "WiresharkFoundation.Wireshark \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "WiresharkFoundation.Wireshark"
+    source: "winget"
+- name: winget_Dell.DisplayAndPeripheralManager
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Dell.DisplayAndPeripheralManager \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Dell.DisplayAndPeripheralManager"
+    source: "winget"
+- name: winget_SDAssociation.SDMemoryCardFormatter
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "SDAssociation.SDMemoryCardFormatter \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "SDAssociation.SDMemoryCardFormatter"
+    source: "winget"
+- name: winget_Microsoft.MouseWithoutBorders
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Microsoft.MouseWithoutBorders \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Microsoft.MouseWithoutBorders"
+    source: "winget"
+- name: winget_Microsoft.PowerToys
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Microsoft.PowerToys \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Microsoft.PowerToys"
+    source: "winget"
+- name: winget_Intel.IntelExtremeTuningUtility
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Intel.IntelExtremeTuningUtility \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Intel.IntelExtremeTuningUtility"
+    source: "winget"
+- name: winget_Biscuit.Biscuit
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Biscuit.Biscuit \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Biscuit.Biscuit"
+    source: "winget"
+- name: winget_Amazon.Chime
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Amazon.Chime \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Amazon.Chime"
+    source: "winget"
+- name: winget_Hashicorp.TerraformLanguageServer
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Hashicorp.TerraformLanguageServer \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Hashicorp.TerraformLanguageServer"
+    source: "winget"
+- name: winget_Hashicorp.Terraform
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Hashicorp.Terraform \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Hashicorp.Terraform"
+    source: "winget"
+- name: winget_Postman.Postman
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Postman.Postman \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Postman.Postman"
+    source: "winget"
+- name: winget_WinMerge.WinMerge
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "WinMerge.WinMerge \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "WinMerge.WinMerge"
+    source: "winget"
+- name: winget_Zoom.Zoom.EXE
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Zoom.Zoom.EXE \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Zoom.Zoom.EXE"
+    source: "winget"
+- name: winget_astral-sh.uv
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "astral-sh.uv \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "astral-sh.uv"
+    source: "winget"
+- name: winget_Obsidian.Obsidian
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Obsidian.Obsidian \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Obsidian.Obsidian"
+    source: "winget"
+- name: winget_dandavison.delta
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "dandavison.delta \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "dandavison.delta"
+    source: "winget"
+- name: winget_DeepL.DeepL
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "DeepL.DeepL \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "DeepL.DeepL"
+    source: "winget"
+- name: winget_ImputNet.Helium
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "ImputNet.Helium \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "ImputNet.Helium"
+    source: "winget"
+- name: winget_Insomnia.Insomnia
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Insomnia.Insomnia \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Insomnia.Insomnia"
+    source: "winget"
+- name: winget_junegunn.fzf
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "junegunn.fzf \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "junegunn.fzf"
+    source: "winget"
+- name: winget_marlocarlo.psmux
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "marlocarlo.psmux \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "marlocarlo.psmux"
+    source: "winget"
+- name: winget_sharkdp.fd
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "sharkdp.fd \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "sharkdp.fd"
+    source: "winget"
+- name: winget_x-motemen.ghq
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "x-motemen.ghq \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "x-motemen.ghq"
+    source: "winget"
+- name: winget_ZedIndustries.Zed
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "ZedIndustries.Zed \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "ZedIndustries.Zed"
+    source: "winget"
+- name: winget_Microsoft.VisualStudioCode
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Microsoft.VisualStudioCode \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Microsoft.VisualStudioCode"
+    source: "winget"
+- name: winget_SomePythonThings.ElevenClock
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "SomePythonThings.ElevenClock \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "SomePythonThings.ElevenClock"
+    source: "winget"
+- name: winget_Anthropic.Claude
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Anthropic.Claude \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Anthropic.Claude"
+    source: "winget"
+- name: winget_Microsoft.Teams
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Microsoft.Teams \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Microsoft.Teams"
+    source: "winget"
+- name: winget_Microsoft.PowerShell
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Microsoft.PowerShell \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Microsoft.PowerShell"
+    source: "winget"
+- name: winget_Microsoft.Sysinternals.Ctrl2Cap
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Microsoft.Sysinternals.Ctrl2Cap のインストール"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Microsoft.Sysinternals.Ctrl2Cap"
+    source: "winget"
+- name: winget_Microsoft.WinDbg
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Microsoft.WinDbg \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Microsoft.WinDbg"
+    source: "winget"
+- name: winget_Microsoft.WindowsTerminal
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Microsoft.WindowsTerminal \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "Microsoft.WindowsTerminal"
+    source: "winget"
+- name: winget_SlackTechnologies.Slack
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "SlackTechnologies.Slack \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget_Microsoft.PreIndexed.Package
+  properties:
+    id: "SlackTechnologies.Slack"
+    source: "winget"
+- name: msstore_9P7KNL5RWT25
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "9P7KNL5RWT25 \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - msstore_Microsoft.Rest
+  properties:
+    id: "9P7KNL5RWT25"
+    source: "msstore"
+- name: winget-font_Microsoft.PreIndexed.Package
+  type: Microsoft.WinGet/Source
+  metadata:
+    description: "winget-font_Microsoft.PreIndexed.Package \u306E\u69CB\u6210"
+    winget:
+      securityContext: "elevated"
+  properties:
+    type: "Microsoft.PreIndexed.Package"
+    trustLevel: "trusted"
+    explicit: true
+    argument: "https://cdn.winget.microsoft.com/fonts"
+    name: "winget-font"
+- name: winget-font_ryanoasis.CaskaydiaCove
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "ryanoasis.CaskaydiaCove \u306E\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB"
+  dependsOn:
+  - winget-font_Microsoft.PreIndexed.Package
+  properties:
+    id: "ryanoasis.CaskaydiaCove"
+    source: "winget-font"

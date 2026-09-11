@@ -23,6 +23,12 @@ winget 公式の import 形式で宣言し、`winget install` を直に叩かな
 | `winget/fav_tools.json` | 常用ツール（どのマシンでも入れる） | `install_fav_tools.ps1` |
 | `winget/machine_dependent.json` | マシン依存（機種・周辺機器。マシンごとに取捨選択） | `install_fav_tools.ps1 -ManifestPath machine_dependent.json` |
 | `winget/optional_tools.json` | 任意。必要なときだけ入れるもの | `install_fav_tools.ps1 -ManifestPath optional_tools.json` |
+| `winget/fonts.json` | フォント（`winget-font` ソース） | `install_fav_tools.ps1 -ManifestPath fonts.json` |
+
+フォントを別ファイルにしているのは `SourceDetails` が他と異なり同居させられないため。
+`winget-font` は検索時に `-s winget-font` の明示指定が要るソース（`winget source list`
+の「明示的」列が true）だが、import は宣言の `SourceDetails` でソースを直接指すため
+この制約を受けない。
 
 `winget export` の生出力（`winget/winget_pkgs*.json`）は環境依存の実導入リストなので
 リポジトリには含めない（`.gitignore` 済み）。手元で棚卸ししたいときに書き出す。
@@ -33,10 +39,31 @@ winget export -o .\winget\winget_pkgs.json
 
 `-ManifestPath` はファイル名だけでも渡せる（`winget/` から解決される）。
 
-3 ファイルの宣言は計 73 件で、重複はない。実際に導入しているもののうち、
+4 ファイルの宣言は計 76 件で、重複はない。実際に導入しているもののうち、
 依存ランタイムなど宣言していないものについては「宣言していないもの」を参照。
 
 `setup.ps1` からは呼ばない。数が多く重いため、必要なときだけ明示的に叩く。
+
+### winget configure に移行していない理由
+
+`winget configure`（DSC ベース）は import/export より新しい宣言的管理で、パッケージ
+だけでなくソース登録や OS 設定まで 1 ファイルで扱える。移行を検討したが、**速度が
+見合わないため見送った。**
+
+`winget configure test` での照合は実測で 67 パッケージ 約 175 秒、Source 3 件を
+含む 79 リソースで **約 17 分**かかる。`winget list` との照合は数秒で終わるため、
+日常的に差分を確認する用途には重すぎる。
+
+判定の正確さでは configure が勝る（表をパースしないため）。ただし `winget list` 側の
+誤判定は原因が分かって解消済みなので、精度を理由に乗り換える必要はなくなった。
+
+`winget/all-packages.configure.winget` を精査済みの宣言として置いてあるが、
+**現状の運用では使っていない**。初回セットアップや、将来 winget 側が速くなった
+ときの土台として保管している。生成元の `winget configure export --all` の出力は
+環境依存の情報（PowerShell プロファイルのパス、OS の外観設定、依存ランタイム、
+機種依存パッケージ）を含むため、そのままでは使えない。
+
+調査の詳細は Obsidian の `50_Knowledge/Windows/winget configure.md` を参照。
 
 ```powershell
 # 何が入るか確認するだけ（何も導入しない）
@@ -162,7 +189,10 @@ winget/                          パッケージ宣言（winget import 形式）
   fav_tools.json                   常用ツール
   machine_dependent.json           マシン依存（機種・周辺機器）
   optional_tools.json              任意（必要なときだけ入れる）
+  fonts.json                       フォント（winget-font ソース）
+  all-packages.configure.winget    winget configure 形式の宣言（保管のみ。運用では未使用）
   winget_pkgs*.json                winget export の生出力（gitignore）
+  all.configure.winget             winget configure export --all の生出力（gitignore）
 Microsoft.PowerShell_profile.ps1 profile ローダー（$PROFILE にコピーされる）
 powershell/                      profile 本体（ローダーから直接参照される）
 WindowsTerminal/settings.json    Windows Terminal 設定
