@@ -63,7 +63,58 @@ function Get-ManifestPackageId {
             if ($pkg.PackageIdentifier) { $ids += $pkg.PackageIdentifier }
         }
     }
-    return $ids
+    # カンマを外さない。1 件だけの宣言（fonts.json 等）では配列が文字列に
+    # 展開され、StrictMode 下で呼び出し側の .Count が例外になる。
+    return ,$ids
+}
+
+# winget-font ソースを含む宣言かどうか。
+#
+# フォントは winget list での ID が FONT\User\<ID> となり、宣言の <ID> と
+# そのままでは一致しない。照合時に前置を剥がす必要があるかをここで判定する。
+#
+# ソース定義で見る。ID の綴りからフォントかどうかは判別できないため。
+#
+# 判定はソース単位ではなくファイル単位。winget-font のソースが 1 つでもあれば、
+# 同じファイル内の通常パッケージにも前置剥がしが効く。ソース単位に精密化する
+# なら ID とソースの組で持ち回る必要があるが、そこまではしない。剥がした ID が
+# 通常パッケージの宣言 ID と衝突して初めて誤判定になり（例: FONT\User\Git.Git
+# が存在し、かつ宣言に Git.Git がある）、フォント名と通常パッケージ ID の
+# 名前空間は実質重ならないため。運用上も fonts.json を分けてあり混在しない。
+#
+# Name と Argument の AND で判定する。片方でも合えば通す作りにしない。
+# Name はローカルで付け替えられる（winget source add --name は任意の名前を
+# 取る）ため、名前だけを信じると任意のソースが winget-font を名乗れてしまう。
+# Argument も部分一致にしない。末尾 /fonts のような緩い照合では攻撃者の
+# ドメイン（https://evil.example/fonts）が通る。
+#
+# 通す条件を絞りすぎて外した場合は、前置を剥がさないだけで「未導入」表示に
+# 寄る。誤って「導入済み」と出して導入を取りこぼすより安全なので、迷ったら
+# 通さない側に倒す。公式 URL が変わったらここを直す。
+$script:FontSourceName = 'winget-font'
+$script:FontSourceArgument = 'https://cdn.winget.microsoft.com/fonts'
+
+function Test-FontManifest {
+    param([string]$Path)
+
+    $json = Get-Content $Path -Raw | ConvertFrom-Json
+    foreach ($source in $json.Sources) {
+        # SourceDetails を持たない宣言もあるため、PSObject 経由で存在を確かめる。
+        # StrictMode 下では未定義プロパティへの直接アクセスが例外になる。
+        $details = $source.PSObject.Properties['SourceDetails']
+        if (-not $details) { continue }
+
+        $name = $details.Value.PSObject.Properties['Name']
+        if (-not $name -or $name.Value -ne $script:FontSourceName) { continue }
+
+        # URL は完全一致で見る。大文字小文字だけはホスト名の慣習に合わせて無視する。
+        $argument = $details.Value.PSObject.Properties['Argument']
+        if (-not $argument) { continue }
+        if ($argument.Value.TrimEnd('/') -ine $script:FontSourceArgument) { continue }
+
+        return $true
+    }
+    return $false
 }
 
 # 導入済み ID の一覧を 1 回の winget 呼び出しで取得する。
@@ -116,21 +167,6 @@ function Get-InstalledPackageId {
     return $ids
 }
 
-# 一覧に現れない ID の最終確認。
-#
-# msstore 由来のパッケージは一覧ではストアの製品 ID（XPDNX7G06BLH2G 等）で
-# 表示され、マニフェストの ID（DeepL.DeepL）とは一致しない。--id 指定で
-# 引いたときだけ winget が名寄せするので、取りこぼし分だけここで照会する。
-#
-# 終了コードは見ない。未導入でも 0 を返すため（実測済み）、全件を導入済みと
-# 誤判定する。「見つかりません」の文言も日本語ロケールでは別文字列。
-# 消去法で、出力に ID が現れるかを見る。
-function Test-PackageInstalled {
-    param([string]$Id)
-
-    $listed = & winget list --id $Id --exact 2>&1 | Out-String
-    return ($listed -match [regex]::Escape($Id))
-}
 #endregion
 
 #region ---------- main ----------
@@ -164,20 +200,33 @@ Write-Ok "$($ids.Count) パッケージが宣言されています。"
 # --- 2. 未導入の洗い出し ---
 # import は導入済みをスキップするが、事前に一覧を見せないと「何が入るか
 # 分からないまま長時間走る」ことになるため、先に照会して提示する。
-Write-Step '導入状況を確認します'
+#
+# この判定は目安であって正確ではない。あくまで差分の雰囲気を掴むためのもの。
+# 導入済みを「未導入」と誤表示することがある（実測: 表示名が長く一覧で行が
+# 折り返される Windows ターミナル、ストアの製品 ID で表示される msstore 由来）。
+# 1 件ずつ winget list --id で照会すれば潰せるが、1 件 1〜2 秒かかり 60 件超
+# では待ち時間に見合わないため採らない。実害は表示だけで、import 側は
+# --no-upgrade が導入済みを正しく除くため二重導入にはならない。
+Write-Step '導入状況を確認します（目安）'
 $installed = Get-InstalledPackageId
 
-# ID の大文字小文字は winget 自身が区別しないため、照合側も揃えておく。
-$installedSet = [System.Collections.Generic.HashSet[string]]::new(
-    [string[]]$installed, [System.StringComparer]::OrdinalIgnoreCase)
+# フォント宣言のときだけ FONT\User\ 等の前置を剥がした形も照合対象に加える。
+# 剥がすのは FONT\ に限る。ARP\ や MSIX\ の後ろは実 ID ではなく製品コードや
+# パッケージフルネームなので、剥がしても宣言の ID とは一致しない。
+#
+# 元の値は消さず追加する。剥がした形だけにすると FONT\ 付きで宣言された
+# 場合に拾えなくなる。候補が増えるだけなので取りこぼしは増えない。
+if (Test-FontManifest -Path $ManifestPath) {
+    $installed += $installed |
+        Where-Object { $_ -match '^FONT\\' } |
+        ForEach-Object { ($_ -split '\\')[-1] }
+}
 
 $pending = @()
 foreach ($id in $ids) {
-    $isInstalled = $installedSet.Contains($id)
-
-    # 一覧で見つからなかったものだけ個別照会する。誤って「未導入」と出すと
-    # 導入済みのパッケージに import が走るため、ここは取りこぼしを潰しておく。
-    if (-not $isInstalled) { $isInstalled = Test-PackageInstalled -Id $id }
+    # -contains は既定で大文字小文字を区別しない。winget 自身も区別しないため
+    # これで一致する。宣言は数十件なので、索引を組むほどの件数ではない。
+    $isInstalled = $installed -contains $id
 
     if ($isInstalled) {
         Write-Skip "導入済み: $id"
