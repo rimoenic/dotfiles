@@ -125,8 +125,17 @@ function Test-FontManifest {
 # export ではなく list を使う。export は「マニフェストに書き戻せるもの」しか
 # 出力せず、導入済みでも黙って落ちるパッケージがある（実測: DeepL）。
 #
-# 出力は表形式で、ID 列はヘッダの 'ID' の桁位置で切り出す。列幅は日本語の
-# アプリ名に合わせて可変なので、固定幅を決め打ちしてはいけない。
+# 出力は表形式。列は 2 スペース以上で区切られるので、そこで分割して 2 番目を
+# ID として取る。
+#
+# ヘッダの桁位置を数えて Substring で切ってはいけない。winget は「表示幅」で
+# 桁を揃えるが Substring は「文字数」で切るため、全角を含む表示名の行で
+# 開始位置がずれて ID の頭が欠ける（実測: Windows ターミナル → rosoft.
+# WindowsTerminal、Google Chrome ベータ版、Logicool Unifying ソフトウェア）。
+# 全角は表示幅 2 に対し文字数 1 で、その差がそのままずれになる。
+#
+# 列が欠けた行もあるため、フィールド数は固定しない（実測で 2〜5 個）。ID は
+# 常に 2 番目に来るので、そこだけを見る。
 function Get-InstalledPackageId {
     # 端末幅で列が切り詰められると ID が欠ける。明示的に広げておく。
     $prevWidth = $env:WINGET_CLI_OUTPUT_WIDTH
@@ -146,21 +155,13 @@ function Get-InstalledPackageId {
     }
     if ($sepIndex -lt 1) { return @() }
 
-    $header = $rows[$sepIndex - 1]
-
-    # ヘッダの列名の前は必ず 2 スペース以上空く。その境界を列開始位置とする。
-    $columnStarts = @(0) + ([regex]::Matches($header, '(?<=\s{2})\S') | ForEach-Object { $_.Index })
-    $idColumn = $columnStarts | Select-Object -Skip 1 -First 1
-    if (-not $idColumn) { return @() }
-    $nextColumn = $columnStarts | Select-Object -Skip 2 -First 1
-
     $ids = @()
     foreach ($row in $rows[($sepIndex + 1)..($rows.Count - 1)]) {
-        if ($row.Length -le $idColumn) { continue }
+        if (-not $row.Trim()) { continue }
 
-        $width = if ($nextColumn -and $nextColumn -lt $row.Length) { $nextColumn - $idColumn }
-                 else { $row.Length - $idColumn }
-        $id = $row.Substring($idColumn, $width).Trim()
+        $fields = $row.Trim() -split '\s{2,}'
+        if ($fields.Count -lt 2) { continue }
+        $id = $fields[1]
 
         if ($id) { $ids += $id }
     }
@@ -201,13 +202,11 @@ Write-Ok "$($ids.Count) パッケージが宣言されています。"
 # import は導入済みをスキップするが、事前に一覧を見せないと「何が入るか
 # 分からないまま長時間走る」ことになるため、先に照会して提示する。
 #
-# この判定は目安であって正確ではない。あくまで差分の雰囲気を掴むためのもの。
-# 導入済みを「未導入」と誤表示することがある（実測: 表示名が長く一覧で行が
-# 折り返される Windows ターミナル、ストアの製品 ID で表示される msstore 由来）。
-# 1 件ずつ winget list --id で照会すれば潰せるが、1 件 1〜2 秒かかり 60 件超
-# では待ち時間に見合わないため採らない。実害は表示だけで、import 側は
-# --no-upgrade が導入済みを正しく除くため二重導入にはならない。
-Write-Step '導入状況を確認します（目安）'
+# 判定は winget list の一覧との照合だけで行い、1 件ずつ winget list --id で
+# 引き直すことはしない。1 件 1〜2 秒かかり 60 件超では待ち時間に見合わない。
+# 取りこぼしても実害は表示だけで、import 側は --no-upgrade が導入済みを
+# 正しく除くため二重導入にはならない。
+Write-Step '導入状況を確認します'
 $installed = Get-InstalledPackageId
 
 # フォント宣言のときだけ FONT\User\ 等の前置を剥がした形も照合対象に加える。
