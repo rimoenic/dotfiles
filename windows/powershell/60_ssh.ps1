@@ -1,5 +1,5 @@
 function Get-SshConfigHosts() {
-    Select-String -Path "$HOME\.ssh\config" -Pattern "^Host " | Select-String -Pattern "\*" -NotMatch -Raw | ForEach-Object { ($_ -split '\s+')[1] } | Sort-Object -Unique
+    Select-String -Path "$HOME\.ssh\config.d/hosts*" -Pattern "^Host " | Select-String -Pattern "\*" -NotMatch -Raw | ForEach-Object { ($_ -split '\s+')[1] } | Sort-Object -Unique
 }
 
 function ssh-fzf() {
